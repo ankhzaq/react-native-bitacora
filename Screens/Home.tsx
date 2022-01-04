@@ -1,8 +1,9 @@
 import { View, Text, FlatList, StyleSheet, Pressable, TextInput, TouchableOpacity, Keyboard } from 'react-native'
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback, useMemo } from 'react'
 import { firebase } from '../config';
 import { FontAwesome } from "@expo/vector-icons";
 import { useNavigation } from '@react-navigation/native';
+import { Item, ItemToShow } from '../types/item';
 
 const Home = () => {
     const [data, setData] = useState([]);
@@ -83,6 +84,19 @@ const Home = () => {
         return optionsSelect;
     }
 
+    const dataToShow = useMemo(() => {
+        const result: ItemToShow[] = [];
+        data.forEach((item: Item) => {
+            const indexItemResult = result.findIndex((itemResult: ItemToShow) => itemResult.tag === item.tag);
+            if (indexItemResult >= 0) result[indexItemResult].count += 1;
+            else {
+                result.push({ ...item, count: 1 });
+            }
+        });
+        return result;
+    }, [data]);
+
+
     return (
         <View style={{flex:1}}>
             <View style={styles.formContainer}>
@@ -119,7 +133,7 @@ const Home = () => {
             </TouchableOpacity>
             <FlatList
                 style={{}}
-                data={data}
+                data={dataToShow}
                 numColumns={1}
                 renderItem={({ item }) => (
                     <View>
@@ -135,7 +149,7 @@ const Home = () => {
                             style={styles.todoIcon} />
                             <View style={styles.innerContainer}>
                                 <Text style={styles.itemHeading}>
-                                    {item.tag}{item.title && ` - ${item.title}`}
+                                    ({item.count}) {item.tag}{item.title && ` - ${item.title}`}
                                 </Text>
                             </View>
 
