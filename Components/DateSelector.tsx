@@ -37,7 +37,7 @@ const DateSelector = ({
             }}
             status='danger'
           >
-            Cancel
+            Cancel (hoy)
           </Button>
           <Button
             onPress={() => {

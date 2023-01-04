@@ -1,11 +1,45 @@
 import { View, DatePickerIOS, FlatList, StyleSheet, Pressable, TouchableOpacity, Keyboard } from 'react-native'
-import { Icon, Layout, Input, Text } from '@ui-kitten/components';
+import { Icon, Layout, Input, Text, Button } from '@ui-kitten/components';
 import React, { useState, useEffect, useMemo } from 'react'
 import { firebase } from '../config';
 import { FontAwesome } from "@expo/vector-icons";
 import { useNavigation } from '@react-navigation/native';
 import { Item, ItemToShow } from '../types/item';
 import DateSelector from '../Components/DateSelector';
+import * as ImagePickerOld from 'expo-image-picker';
+// import { ImagePicker } from 'expo-image-multiple-picker'
+
+async function takeAndUploadPhotoAsync() {
+  console.log('takeAndUploadPhotoAsync');
+  // Display the camera to the user and wait for them to take a photo or to cancel
+  // the action
+  let result = await ImagePickerOld.launchImageLibraryAsync({
+    allowsEditing: true,
+    aspect: [4, 3],
+  });
+
+  if (result.cancelled) {
+    return;
+  }
+
+  // ImagePicker saves the taken photo to disk and returns a local URI to it
+  let localUri = result.uri;
+  let filename = localUri.split('/').pop();
+
+  // Infer the type of the image
+  let match = /\.(\w+)$/.exec(filename);
+  let type = match ? `image/${match[1]}` : `image`;
+
+  // Upload the image using the fetch and FormData APIs
+  let formData = new FormData();
+  // Assume "photo" is the name of the form field the server expects
+  // @ts-ignore
+  formData.append('photo', { uri: localUri, name: filename, type });
+  console.log('localUri: ', localUri);
+  console.log('filename: ', filename);
+  console.log('type: ', type);
+}
+
 
 const Home = () => {
   const [data, setData] = useState([]);
@@ -124,6 +158,13 @@ const Home = () => {
         />
         <DateSelector onChange={onDateChange}/>
       </Layout>
+      <Button onPress={takeAndUploadPhotoAsync}>
+        Upload
+      </Button>
+      {/*<ImagePicker
+        onSave={(assets) => console.log(assets)}
+        onCancel={() => console.log('no permissions or user go back')}
+      />*/}
       <Layout style={{ flex: 1 }}>
         <TouchableOpacity style={styles.button} onPress={addItem}>
           <Text style={styles.buttonText}>Add</Text>
