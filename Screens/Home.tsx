@@ -1,4 +1,5 @@
-import { View, Text, FlatList, StyleSheet, Pressable, TextInput, TouchableOpacity, Keyboard } from 'react-native'
+import { View, DatePickerIOS, FlatList, StyleSheet, Pressable, TextInput, TouchableOpacity, Keyboard } from 'react-native'
+import { Icon, Layout, Text } from '@ui-kitten/components';
 import React, { useState, useEffect, useMemo } from 'react'
 import { firebase } from '../config';
 import { FontAwesome } from "@expo/vector-icons";
@@ -10,7 +11,7 @@ const Home = () => {
   const dataRef = firebase.firestore().collection('bitacora');
   const [description, setDescription] = useState('');
   const [tag, setTag] = useState('');
-  const [range, setRange] = React.useState({});
+  const [date, setDate] = useState(new Date());
   const [title, setTitle] = useState('');
   const navigation = useNavigation();
 
@@ -99,8 +100,8 @@ const Home = () => {
 
 
   return (
-    <View style={{flex:1}}>
-      <View style={styles.formContainer}>
+    <Layout style={{ flex: 1 }}>
+      <Layout style={styles.formContainer}>
         <TextInput
           style={styles.input}
           placeholder='Tag'
@@ -128,7 +129,11 @@ const Home = () => {
           underlineColorAndroid="transparent"
           autoCapitalize="none"
         />
-      </View>
+        <DatePickerIOS
+          date={date}
+          onDateChange={(nextDate) => setDate(nextDate)}
+        />
+      </Layout>
       <TouchableOpacity style={styles.button} onPress={addItem}>
         <Text style={styles.buttonText}>Add</Text>
       </TouchableOpacity>
@@ -136,7 +141,7 @@ const Home = () => {
         style={{}}
         data={dataToShow}
         numColumns={1}
-        renderItem={({ item }) => (
+        renderItem={({ item }: { item: ItemToShow }) => (
           <View>
             <Pressable
               style={styles.container}
@@ -155,11 +160,9 @@ const Home = () => {
               </View>
             </Pressable>
           </View>
-
-
         )}
       />
-    </View>
+    </Layout>
   )
 }
 
@@ -184,8 +187,8 @@ const styles = StyleSheet.create({
     marginRight:22
   },
   formContainer: {
+    flex: 1,
     flexDirection: 'column',
-    height: 150,
     marginLeft:10,
     marginRight: 10,
     marginTop:100

@@ -7,7 +7,7 @@ export interface Item {
   email: string;
   images?: string[];
   private: boolean;
-  tag: boolean;
+  tag: string;
   title: string;
 }
 

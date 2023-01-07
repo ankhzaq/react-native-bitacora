@@ -1,4 +1,4 @@
-import { ApplicationProvider, Layout } from '@ui-kitten/components';
+import { ApplicationProvider } from '@ui-kitten/components';
 import * as eva from '@eva-design/eva';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
