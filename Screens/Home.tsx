@@ -1,16 +1,18 @@
-import { View, DatePickerIOS, FlatList, StyleSheet, Pressable, TextInput, TouchableOpacity, Keyboard } from 'react-native'
-import { Icon, Layout, Text } from '@ui-kitten/components';
+import { View, DatePickerIOS, FlatList, StyleSheet, Pressable, TouchableOpacity, Keyboard } from 'react-native'
+import { Icon, Layout, Input, Text } from '@ui-kitten/components';
 import React, { useState, useEffect, useMemo } from 'react'
 import { firebase } from '../config';
 import { FontAwesome } from "@expo/vector-icons";
 import { useNavigation } from '@react-navigation/native';
 import { Item, ItemToShow } from '../types/item';
+import DateSelector from '../Components/DateSelector';
 
 const Home = () => {
   const [data, setData] = useState([]);
   const dataRef = firebase.firestore().collection('bitacora');
   const [description, setDescription] = useState('');
   const [tag, setTag] = useState('');
+  const [showDate, setShowDate] = useState(true);
   const [date, setDate] = useState(new Date());
   const [title, setTitle] = useState('');
   const navigation = useNavigation();
@@ -29,7 +31,7 @@ const Home = () => {
           setData(initialData)
           //console.log(users)
         })
-  }, [])
+  }, []);
 
   // delete an item from firestore db
   const deleteItem = (item) => {
@@ -76,16 +78,6 @@ const Home = () => {
     }
   }
 
-  const getOptionsPicker = () => {
-    const optionsSelect = [];
-    data.forEach(({ tag }) => {
-      if (!optionsSelect.includes(tag)) {
-        optionsSelect.push(tag);
-      }
-    });
-    return optionsSelect;
-  }
-
   const dataToShow = useMemo(() => {
     const result: ItemToShow[] = [];
     data.forEach((item: Item) => {
@@ -100,68 +92,64 @@ const Home = () => {
 
 
   return (
-    <Layout style={{ flex: 1 }}>
-      <Layout style={styles.formContainer}>
-        <TextInput
-          style={styles.input}
-          placeholder='Tag'
+    <Layout style={{ flex: 1, paddingHorizontal: 10, justifyContent:'space-between' }}>
+      <Layout style={{ flex: 1 }}>
+        <Input
+          label='Tag'
           placeholderTextColor="#aaaaaa"
           onChangeText={(text) => setTag(text)}
           value={tag}
           underlineColorAndroid="transparent"
           autoCapitalize="none"
         />
-        <TextInput
-          style={styles.input}
-          placeholder='Title'
+        <Input
+          label='Title'
           placeholderTextColor="#aaaaaa"
           onChangeText={(text) => setTitle(text)}
           value={title}
           underlineColorAndroid="transparent"
           autoCapitalize="none"
         />
-        <TextInput
-          style={styles.input}
-          placeholder='Description'
+        <Input
+          label='Description'
           placeholderTextColor="#aaaaaa"
           onChangeText={(text) => setDescription(text)}
           value={description}
           underlineColorAndroid="transparent"
           autoCapitalize="none"
         />
-        <DatePickerIOS
-          date={date}
-          onDateChange={(nextDate) => setDate(nextDate)}
+        <DateSelector />
+      </Layout>
+      <Layout style={{ flex: 2 }}>
+        <TouchableOpacity style={styles.button} onPress={addItem}>
+          <Text style={styles.buttonText}>Add</Text>
+        </TouchableOpacity>
+        <FlatList
+          style={{}}
+          data={dataToShow}
+          numColumns={1}
+          renderItem={({ item }: { item: ItemToShow }) => (
+            <View>
+              <Pressable
+                style={styles.container}
+                // @ts-ignore
+                onPress={() => navigation.navigate('Detail', {item})}
+              >
+                <FontAwesome name="trash-o"
+                             color="red"
+                  // @ts-ignore
+                             onPress={() => deleteItem(item)}
+                             style={styles.todoIcon} />
+                <View style={styles.innerContainer}>
+                  <Text style={styles.itemHeading}>
+                    ({item.count}) {item.tag}{item.title && ` - ${item.title}`}
+                  </Text>
+                </View>
+              </Pressable>
+            </View>
+          )}
         />
       </Layout>
-      <TouchableOpacity style={styles.button} onPress={addItem}>
-        <Text style={styles.buttonText}>Add</Text>
-      </TouchableOpacity>
-      <FlatList
-        style={{}}
-        data={dataToShow}
-        numColumns={1}
-        renderItem={({ item }: { item: ItemToShow }) => (
-          <View>
-            <Pressable
-              style={styles.container}
-              // @ts-ignore
-              onPress={() => navigation.navigate('Detail', {item})}
-            >
-              <FontAwesome name="trash-o"
-                           color="red"
-                // @ts-ignore
-                           onPress={() => deleteItem(item)}
-                           style={styles.todoIcon} />
-              <View style={styles.innerContainer}>
-                <Text style={styles.itemHeading}>
-                  ({item.count}) {item.tag}{item.title && ` - ${item.title}`}
-                </Text>
-              </View>
-            </Pressable>
-          </View>
-        )}
-      />
     </Layout>
   )
 }
@@ -192,16 +180,6 @@ const styles = StyleSheet.create({
     marginLeft:10,
     marginRight: 10,
     marginTop:100
-  },
-  input: {
-    backgroundColor: 'white',
-    borderRadius: 5,
-    flex: 1,
-    height: 52,
-    marginHorizontal: 5,
-    marginVertical: 5,
-    overflow: 'hidden',
-    paddingLeft: 16,
   },
   button: {
     height: 47,
