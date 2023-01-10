@@ -12,10 +12,14 @@ const Home = () => {
   const dataRef = firebase.firestore().collection('bitacora');
   const [description, setDescription] = useState('');
   const [tag, setTag] = useState('');
-  const [showDate, setShowDate] = useState(true);
-  const [date, setDate] = useState(new Date());
   const [title, setTitle] = useState('');
   const navigation = useNavigation();
+
+  let date: Date = new Date();
+
+  const onDateChange = (newDate: Date) => {
+    date = newDate;
+  }
 
   // fetch or read the data from firestore
   useEffect(() => {
@@ -118,9 +122,9 @@ const Home = () => {
           underlineColorAndroid="transparent"
           autoCapitalize="none"
         />
-        <DateSelector />
+        <DateSelector onChange={onDateChange}/>
       </Layout>
-      <Layout style={{ flex: 2 }}>
+      <Layout style={{ flex: 1 }}>
         <TouchableOpacity style={styles.button} onPress={addItem}>
           <Text style={styles.buttonText}>Add</Text>
         </TouchableOpacity>

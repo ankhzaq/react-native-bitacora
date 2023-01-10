@@ -22,7 +22,6 @@ const DateSelector = ({
   const [date, setDate] = useState(defaultDate);
   const [editDate, setEditDate] = useState(editDateInitialValue);
 
-
   return (
     editDate ? (
       <Layout
@@ -31,9 +30,13 @@ const DateSelector = ({
         <DatePickerIOS
           date={date}
           onDateChange={(nextDate) => setDate(nextDate)}
+          style={{ flex: 1 }}
         />
         <Button
-          onPress={() => setEditDate(false)}
+          onPress={() => {
+            if (onChange) onChange(date);
+            setEditDate(false)
+          }}
         >
           Confirm
         </Button>
