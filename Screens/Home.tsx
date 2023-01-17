@@ -97,7 +97,7 @@ const Home = () => {
 
   return (
     <Layout style={{ flex: 1, paddingHorizontal: 10, justifyContent:'space-between' }}>
-      <Layout style={{ flex: 1 }}>
+      <Layout style={{ flex: 1, maxHeight: 350 }}>
         <Input
           label='Tag'
           placeholderTextColor="#aaaaaa"
