@@ -1,19 +1,19 @@
-import { View, DatePickerIOS, FlatList, StyleSheet, Pressable, TouchableOpacity, Keyboard } from 'react-native'
-import { Icon, Layout, Input, Text, Button } from '@ui-kitten/components';
+import { View, FlatList, StyleSheet, Pressable, TouchableOpacity, Keyboard } from 'react-native'
+import { Layout, Input, Text, Button } from '@ui-kitten/components';
 import React, { useState, useEffect, useMemo } from 'react'
 import { firebase } from '../config';
 import { FontAwesome } from "@expo/vector-icons";
 import { useNavigation } from '@react-navigation/native';
 import { Item, ItemToShow } from '../types/item';
 import DateSelector from '../Components/DateSelector';
-import * as ImagePickerOld from 'expo-image-picker';
+import * as ImagePicker from 'expo-image-picker';
 // import { ImagePicker } from 'expo-image-multiple-picker'
 
 async function takeAndUploadPhotoAsync() {
   console.log('takeAndUploadPhotoAsync');
   // Display the camera to the user and wait for them to take a photo or to cancel
   // the action
-  let result = await ImagePickerOld.launchImageLibraryAsync({
+  let result = await ImagePicker.launchImageLibraryAsync({
     allowsEditing: true,
     aspect: [4, 3],
   });
@@ -47,6 +47,7 @@ const Home = () => {
   const [description, setDescription] = useState('');
   const [tag, setTag] = useState('');
   const [title, setTitle] = useState('');
+  const [dateEditionEnabled, setDateEditionEnabled] = useState(false);
   const navigation = useNavigation();
 
   let date: Date = new Date();
@@ -156,16 +157,16 @@ const Home = () => {
           underlineColorAndroid="transparent"
           autoCapitalize="none"
         />
-        <DateSelector onChange={onDateChange}/>
+        <DateSelector onChange={onDateChange} onEditDate={setDateEditionEnabled} />
       </Layout>
-      <Button onPress={takeAndUploadPhotoAsync}>
+      <Button onPress={takeAndUploadPhotoAsync} style={{ marginTop: 10 }}>
         Upload
       </Button>
       {/*<ImagePicker
         onSave={(assets) => console.log(assets)}
         onCancel={() => console.log('no permissions or user go back')}
       />*/}
-      <Layout style={{ flex: 1 }}>
+      <Layout style={{ flex: dateEditionEnabled ? 1 : 2 }}>
         <TouchableOpacity style={styles.button} onPress={addItem}>
           <Text style={styles.buttonText}>Add</Text>
         </TouchableOpacity>

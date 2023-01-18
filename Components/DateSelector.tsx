@@ -7,16 +7,21 @@ interface Props {
   editDateInitialValue?: boolean,
   showDateWithoutEdit?: boolean,
   onChange?: (value: Date) => void;
+  onEditDate?: (value: boolean) => void;
 }
 
 const DateSelector = ({
  defaultDate = new Date(),
  editDateInitialValue = false,
  onChange,
+ onEditDate,
 }: Props) => {
-
   const [date, setDate] = useState(defaultDate);
   const [editDate, setEditDate] = useState(editDateInitialValue);
+
+  const onEditDateChanged = (value: boolean) => {
+    if (onEditDate) onEditDate(value);
+  }
 
   return (
     editDate ? (
@@ -33,6 +38,7 @@ const DateSelector = ({
             onPress={() => {
               setDate(defaultDate);
               onChange(defaultDate);
+              onEditDateChanged(false);
               setEditDate(false)
             }}
             status='danger'
@@ -42,6 +48,7 @@ const DateSelector = ({
           <Button
             onPress={() => {
               if (onChange) onChange(date);
+              onEditDateChanged(false);
               setEditDate(false)
             }}
             status='success'
@@ -58,7 +65,10 @@ const DateSelector = ({
           value={date.toISOString().split('T')[0]}
         />
         <Button
-          onPress={() => setEditDate(true)}
+          onPress={() => {
+            onEditDateChanged(true);
+            setEditDate(true)
+          }}
           style={{ marginLeft: 15, marginTop: 15 }}
         >
           Change
