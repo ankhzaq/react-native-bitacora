@@ -1,5 +1,5 @@
-import { View, FlatList, StyleSheet, Pressable, TouchableOpacity, Keyboard } from 'react-native'
-import { Layout, Input, Text, Button } from '@ui-kitten/components';
+import { View, FlatList, StyleSheet, Pressable, TouchableOpacity, Keyboard, Image } from 'react-native'
+import { Layout, Input,  Text, Button } from '@ui-kitten/components';
 import React, { useState, useEffect, useMemo } from 'react'
 import { firebase } from '../config';
 import { FontAwesome } from "@expo/vector-icons";
@@ -9,37 +9,6 @@ import DateSelector from '../Components/DateSelector';
 import * as ImagePicker from 'expo-image-picker';
 // import { ImagePicker } from 'expo-image-multiple-picker'
 
-async function takeAndUploadPhotoAsync() {
-  console.log('takeAndUploadPhotoAsync');
-  // Display the camera to the user and wait for them to take a photo or to cancel
-  // the action
-  let result = await ImagePicker.launchImageLibraryAsync({
-    allowsEditing: true,
-    aspect: [4, 3],
-  });
-
-  if (result.cancelled) {
-    return;
-  }
-
-  // ImagePicker saves the taken photo to disk and returns a local URI to it
-  let localUri = result.uri;
-  let filename = localUri.split('/').pop();
-
-  // Infer the type of the image
-  let match = /\.(\w+)$/.exec(filename);
-  let type = match ? `image/${match[1]}` : `image`;
-
-  // Upload the image using the fetch and FormData APIs
-  let formData = new FormData();
-  // Assume "photo" is the name of the form field the server expects
-  // @ts-ignore
-  formData.append('photo', { uri: localUri, name: filename, type });
-  console.log('localUri: ', localUri);
-  console.log('filename: ', filename);
-  console.log('type: ', type);
-}
-
 
 const Home = () => {
   const [data, setData] = useState([]);
@@ -47,8 +16,24 @@ const Home = () => {
   const [description, setDescription] = useState('');
   const [tag, setTag] = useState('');
   const [title, setTitle] = useState('');
+  const [image, setImage] = useState<string>();
   const [dateEditionEnabled, setDateEditionEnabled] = useState(false);
   const navigation = useNavigation();
+
+  const takeAndUploadPhotoAsync = async () => {
+    // Display the camera to the user and wait for them to take a photo or to cancel
+    // the action
+    let result = await ImagePicker.launchImageLibraryAsync({
+      allowsEditing: true,
+      aspect: [4, 3],
+    });
+
+    if (result.cancelled) {
+      return;
+    }
+    console.log(result.uri);
+    setImage(result.uri);
+  }
 
   let date: Date = new Date();
 
@@ -159,13 +144,24 @@ const Home = () => {
         />
         <DateSelector onChange={onDateChange} onEditDate={setDateEditionEnabled} />
       </Layout>
-      <Button onPress={takeAndUploadPhotoAsync} style={{ marginTop: 10 }}>
-        Upload
-      </Button>
-      {/*<ImagePicker
-        onSave={(assets) => console.log(assets)}
-        onCancel={() => console.log('no permissions or user go back')}
-      />*/}
+      <Layout style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop: 15 }}>
+        { image && (
+          <Image
+            source={{ uri: image }}
+            style={{ height: 100, width: 100  }}
+          />
+        )}
+        <Layout style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-around', marginTop: 10 }}>
+          <Button onPress={takeAndUploadPhotoAsync}>
+            Upload
+          </Button>
+          { image && (
+            <Button onPress={() => {setImage(undefined)}} style={{ marginLeft: 15 }} status="danger">
+              Remove Image
+            </Button>
+          )}
+        </Layout>
+      </Layout>
       <Layout style={{ flex: dateEditionEnabled ? 1 : 2 }}>
         <TouchableOpacity style={styles.button} onPress={addItem}>
           <Text style={styles.buttonText}>Add</Text>
@@ -250,3 +246,7 @@ const styles = StyleSheet.create({
 });
 
 export default Home
+function setImage(localUri: string) {
+    throw new Error('Function not implemented.');
+}
+
