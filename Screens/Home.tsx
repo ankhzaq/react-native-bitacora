@@ -9,6 +9,11 @@ import DateSelector from '../Components/DateSelector';
 import * as ImagePicker from 'expo-image-picker';
 // import { ImagePicker } from 'expo-image-multiple-picker'
 
+const CONSTANT_ITEM = {
+  email: "darthzaq@gmail.com",
+  private: false,
+}
+
 
 const Home = () => {
   const [data, setData] = useState([]);
@@ -52,8 +57,7 @@ const Home = () => {
             const item = doc.data()
             initialData.push(item)
           })
-          setData(initialData)
-          //console.log(users)
+          setData(initialData);
         })
   }, []);
 
@@ -71,35 +75,29 @@ const Home = () => {
   }
 
   // add a todo
-  const addItem = () => {
-    // check if we have a todo.
-    if (tag.length) {
-      // get the timestamp
-      const timestamp = firebase.firestore.FieldValue.serverTimestamp();
-      const data = {
-        createdAt: timestamp,
-        description,
-        email: "darthzaq@gmail.com",
-        private: false,
-        tag,
-        title,
-      };
-      if (!data.title || !data.title.length) delete data.title;
-      if (!data.description || !data.description.length) delete data.description;
-      dataRef
-        .add(data)
-        .then(() => {
-          // release todo state
-          setTitle('');
-          setDescription('');
-          // release keyboard
-          Keyboard.dismiss();
-        })
-        .catch((error) => {
-          // show an alert in case of error
-          alert(error);
-        })
-    }
+  const addItem = (dataPressed?: Item) => {
+    const data: Item = dataPressed || {
+      createdAt: date,
+      description,
+      ...CONSTANT_ITEM,
+      tag,
+      title,
+    };
+    if (!data.title || !data.title.length) delete data.title;
+    if (!data.description || !data.description.length) delete data.description;
+    dataRef
+      .add(data)
+      .then(() => {
+        // release todo state
+        setTitle('');
+        setDescription('');
+        // release keyboard
+        Keyboard.dismiss();
+      })
+      .catch((error) => {
+        // show an alert in case of error
+        alert(error);
+      });
   }
 
   const dataToShow = useMemo(() => {
@@ -164,7 +162,7 @@ const Home = () => {
       </Layout>
       <Layout style={{ flex: dateEditionEnabled ? 1 : 2 }}>
         <TouchableOpacity style={styles.button} onPress={addItem}>
-          <Text style={styles.buttonText}>Add</Text>
+          <Text style={styles.buttonText} disabled={!tag}>Add</Text>
         </TouchableOpacity>
         <FlatList
           style={{}}
@@ -173,13 +171,16 @@ const Home = () => {
           renderItem={({ item }: { item: ItemToShow }) => (
             <View>
               <Pressable
+                disabled={!!item.title || !!item.description || !item.tag}
                 style={styles.container}
                 // @ts-ignore
-                onPress={() => navigation.navigate('Detail', {item})}
+                onPress={() => {
+                  addItem({ createdAt: new Date(), tag: item.tag, ...CONSTANT_ITEM });
+                  // navigation.navigate('Detail', {item});
+                }}
               >
                 <FontAwesome name="trash-o"
                              color="red"
-                  // @ts-ignore
                              onPress={() => deleteItem(item)}
                              style={styles.todoIcon} />
                 <View style={styles.innerContainer}>

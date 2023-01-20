@@ -1,14 +1,11 @@
 export interface Item {
-  created: {
-    nanoseconds: number;
-    seconds: number;
-  },
-  description: string;
+  createdAt: Date,
+  description?: string;
   email: string;
   images?: string[];
   private: boolean;
   tag: string;
-  title: string;
+  title?: string;
 }
 
 export interface ItemToShow extends Item {
