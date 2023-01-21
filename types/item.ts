@@ -8,6 +8,11 @@ export interface Item {
   title?: string;
 }
 
-export interface ItemToShow extends Item {
+export interface ItemWithId extends Item {
+  id: string;
+}
+
+export interface ItemToShow extends ItemWithId {
+  id: string;
   count: number;
 }

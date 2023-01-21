@@ -4,7 +4,7 @@ import React, { useState, useEffect, useMemo } from 'react'
 import { firebase } from '../config';
 import { FontAwesome } from "@expo/vector-icons";
 import { useNavigation } from '@react-navigation/native';
-import { Item, ItemToShow } from '../types/item';
+import { Item, ItemToShow, ItemWithId } from '../types/item';
 import DateSelector from '../Components/DateSelector';
 import * as ImagePicker from 'expo-image-picker';
 // import { ImagePicker } from 'expo-image-multiple-picker'
@@ -36,7 +36,6 @@ const Home = () => {
     if (result.cancelled) {
       return;
     }
-    console.log(result.uri);
     setImage(result.uri);
   }
 
@@ -55,7 +54,7 @@ const Home = () => {
           const initialData = []
           querySnapshot.forEach((doc) => {
             const item = doc.data()
-            initialData.push(item)
+            initialData.push({ id: doc.id, ...item})
           })
           setData(initialData);
         })
@@ -67,7 +66,7 @@ const Home = () => {
       .doc(item.id)
       .delete()
       .then(() => {
-        alert("Deleted successfully");
+        // alert("Deleted successfully");
       })
       .catch(error => {
         alert(error);
@@ -102,7 +101,7 @@ const Home = () => {
 
   const dataToShow = useMemo(() => {
     const result: ItemToShow[] = [];
-    data.forEach((item: Item) => {
+    data.forEach((item: ItemWithId) => {
       const indexItemResult = result.findIndex((itemResult: ItemToShow) => itemResult.tag === item.tag);
       if (indexItemResult >= 0) result[indexItemResult].count += 1;
       else {
