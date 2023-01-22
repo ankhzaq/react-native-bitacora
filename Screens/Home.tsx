@@ -160,9 +160,9 @@ const Home = () => {
         </Layout>
       </Layout>
       <Layout style={{ flex: dateEditionEnabled ? 1 : 2 }}>
-        <TouchableOpacity style={styles.button} onPress={addItem}>
-          <Text style={styles.buttonText} disabled={!tag}>Add</Text>
-        </TouchableOpacity>
+        <Button disabled={!tag} onPress={addItem} style={styles.button}>
+          Add
+        </Button>
         <FlatList
           style={{}}
           data={dataToShow}
