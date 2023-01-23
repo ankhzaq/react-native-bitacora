@@ -160,7 +160,9 @@ const Home = () => {
         </Layout>
       </Layout>
       <Layout style={{ flex: dateEditionEnabled ? 1 : 2 }}>
-        <Button disabled={!tag} onPress={addItem} style={styles.button}>
+        <Button disabled={!tag} onPress={() => {
+          addItem();
+        }} style={styles.button}>
           Add
         </Button>
         <FlatList
