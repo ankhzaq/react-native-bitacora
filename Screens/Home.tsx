@@ -1,4 +1,4 @@
-import { View, FlatList, StyleSheet, Pressable, TouchableOpacity, Keyboard, Image } from 'react-native'
+import { View, FlatList, StyleSheet, Pressable, Keyboard, Image } from 'react-native'
 import { Layout, Input,  Text, Button } from '@ui-kitten/components';
 import React, { useState, useEffect, useMemo } from 'react'
 import { firebase } from '../config';
@@ -111,6 +111,7 @@ const Home = () => {
     return result;
   }, [data]);
 
+  const addBtnDisabled = !tag;
 
   return (
     <Layout style={{ flex: 1, paddingHorizontal: 10, justifyContent:'space-between' }}>
@@ -160,9 +161,9 @@ const Home = () => {
         </Layout>
       </Layout>
       <Layout style={{ flex: dateEditionEnabled ? 1 : 2 }}>
-        <Button disabled={!tag} onPress={() => {
-          addItem();
-        }} style={styles.button}>
+        <Button
+          disabled={addBtnDisabled}
+          onPress={() => { addItem(); }} style={addBtnDisabled ? {...styles.button, ...styles.buttonDisabled} : styles.button}>
           Add
         </Button>
         <FlatList
@@ -234,6 +235,10 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     alignItems: "center",
     justifyContent: 'center'
+  },
+  buttonDisabled: {
+    backgroundColor: 'grey',
+    opacity: 0.4,
   },
   buttonText: {
     color: 'white',
