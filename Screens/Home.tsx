@@ -23,7 +23,7 @@ const Home = () => {
   const [title, setTitle] = useState('');
   const [image, setImage] = useState<string>();
   const [dateEditionEnabled, setDateEditionEnabled] = useState(false);
-  const navigation = useNavigation();
+  // const navigation = useNavigation();
 
   const takeAndUploadPhotoAsync = async () => {
     // Display the camera to the user and wait for them to take a photo or to cancel
@@ -82,6 +82,7 @@ const Home = () => {
       tag,
       title,
     };
+    if (image) data.images = [image];
     if (!data.title || !data.title.length) delete data.title;
     if (!data.description || !data.description.length) delete data.description;
     dataRef
@@ -170,29 +171,41 @@ const Home = () => {
           style={{}}
           data={dataToShow}
           numColumns={1}
-          renderItem={({ item }: { item: ItemToShow }) => (
-            <View>
-              <Pressable
-                disabled={!!item.title || !!item.description || !item.tag}
-                style={styles.container}
-                // @ts-ignore
-                onPress={() => {
-                  addItem({ createdAt: new Date(), tag: item.tag, ...CONSTANT_ITEM });
-                  // navigation.navigate('Detail', {item});
-                }}
-              >
-                <FontAwesome name="trash-o"
-                             color="red"
-                             onPress={() => deleteItem(item)}
-                             style={styles.todoIcon} />
-                <View style={styles.innerContainer}>
-                  <Text style={styles.itemHeading}>
-                    ({item.count}) {item.tag}{item.title && ` - ${item.title}`}
-                  </Text>
-                </View>
-              </Pressable>
-            </View>
-          )}
+          renderItem={({ item }: { item: ItemToShow }) => {
+            console.log(item.images);
+            return (
+              <View>
+                <Pressable
+                  disabled={!!item.title || !!item.description || !item.tag}
+                  style={styles.container}
+                  // @ts-ignore
+                  onPress={() => {
+                    addItem({ createdAt: new Date(), tag: item.tag, ...CONSTANT_ITEM });
+                    // navigation.navigate('Detail', {item});
+                  }}
+                >
+                  <FontAwesome name="trash-o"
+                               color="red"
+                               onPress={() => deleteItem(item)}
+                               style={styles.todoIcon} />
+                  <View style={styles.innerContainer}>
+                    <Text style={styles.itemHeading}>
+                      ({item.count})
+                    </Text>
+                    {item.images && (
+                      <Image
+                        source={{ uri: item.images[0] }}
+                        style={{ height: 32, width: 32  }}
+                      />
+                    )}
+                    <Text style={styles.itemHeading}>
+                      {item.tag}{item.title && ` - ${item.title}`}
+                    </Text>
+                  </View>
+                </Pressable>
+              </View>
+            )
+          }}
         />
       </Layout>
     </Layout>
@@ -211,13 +224,14 @@ const styles = StyleSheet.create({
   },
   innerContainer: {
     alignItems: 'center',
-    flexDirection: 'column',
+    display: 'flex',
+    flexDirection: 'row',
     marginLeft:45,
   },
   itemHeading: {
     fontWeight: 'bold',
     fontSize:18,
-    marginRight:22
+    marginHorizontal: 5,
   },
   formContainer: {
     flex: 1,
