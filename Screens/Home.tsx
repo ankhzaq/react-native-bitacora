@@ -20,6 +20,7 @@ const Home = () => {
   const dataRef = firebase.firestore().collection('bitacora');
   const [description, setDescription] = useState('');
   const [tag, setTag] = useState('');
+  const [showForm, setShowForm] = useState(true);
   const [title, setTitle] = useState('');
   const [image, setImage] = useState<string>();
   const [dateEditionEnabled, setDateEditionEnabled] = useState(false);
@@ -116,57 +117,64 @@ const Home = () => {
 
   return (
     <Layout style={{ flex: 1, paddingHorizontal: 10, justifyContent:'space-between' }}>
-      <Layout style={{ flex: 1, maxHeight: 350 }}>
-        <Input
-          label='Tag'
-          placeholderTextColor="#aaaaaa"
-          onChangeText={(text) => setTag(text)}
-          value={tag}
-          underlineColorAndroid="transparent"
-          autoCapitalize="none"
-        />
-        <Input
-          label='Title'
-          placeholderTextColor="#aaaaaa"
-          onChangeText={(text) => setTitle(text)}
-          value={title}
-          underlineColorAndroid="transparent"
-          autoCapitalize="none"
-        />
-        <Input
-          label='Description'
-          placeholderTextColor="#aaaaaa"
-          onChangeText={(text) => setDescription(text)}
-          value={description}
-          underlineColorAndroid="transparent"
-          autoCapitalize="none"
-        />
-        <DateSelector onChange={onDateChange} onEditDate={setDateEditionEnabled} />
-      </Layout>
-      <Layout style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop: 15 }}>
-        { image && (
-          <Image
-            source={{ uri: image }}
-            style={{ height: 100, width: 100  }}
-          />
-        )}
-        <Layout style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-around', marginTop: 10 }}>
-          <Button onPress={takeAndUploadPhotoAsync}>
-            Upload
+      <Button onPress={() => {setShowForm(!showForm)}} style={{ marginLeft: 15 }}>
+        { showForm ? 'Hide Form' : 'Show Form' }
+      </Button>
+      {showForm && (
+        <>
+          <Layout style={{ flex: 1, maxHeight: 350 }}>
+            <Input
+              label='Tag'
+              placeholderTextColor="#aaaaaa"
+              onChangeText={(text) => setTag(text)}
+              value={tag}
+              underlineColorAndroid="transparent"
+              autoCapitalize="none"
+            />
+            <Input
+              label='Title'
+              placeholderTextColor="#aaaaaa"
+              onChangeText={(text) => setTitle(text)}
+              value={title}
+              underlineColorAndroid="transparent"
+              autoCapitalize="none"
+            />
+            <Input
+              label='Description'
+              placeholderTextColor="#aaaaaa"
+              onChangeText={(text) => setDescription(text)}
+              value={description}
+              underlineColorAndroid="transparent"
+              autoCapitalize="none"
+            />
+            <DateSelector onChange={onDateChange} onEditDate={setDateEditionEnabled} />
+          </Layout>
+          <Layout style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop: 15 }}>
+            { image && (
+              <Image
+                source={{ uri: image }}
+                style={{ height: 100, width: 100  }}
+              />
+            )}
+            <Layout style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-around', marginTop: 10 }}>
+              <Button onPress={takeAndUploadPhotoAsync}>
+                Upload
+              </Button>
+              { image && (
+                <Button onPress={() => {setImage(undefined)}} style={{ marginLeft: 15 }} status="danger">
+                  Remove Image
+                </Button>
+              )}
+            </Layout>
+          </Layout>
+          <Button
+            disabled={addBtnDisabled}
+            onPress={() => { addItem(); }} style={addBtnDisabled ? {...styles.button, ...styles.buttonDisabled} : styles.button}>
+            Add
           </Button>
-          { image && (
-            <Button onPress={() => {setImage(undefined)}} style={{ marginLeft: 15 }} status="danger">
-              Remove Image
-            </Button>
-          )}
-        </Layout>
-      </Layout>
+        </>
+      )}
       <Layout style={{ flex: dateEditionEnabled ? 1 : 2 }}>
-        <Button
-          disabled={addBtnDisabled}
-          onPress={() => { addItem(); }} style={addBtnDisabled ? {...styles.button, ...styles.buttonDisabled} : styles.button}>
-          Add
-        </Button>
         <FlatList
           style={{}}
           data={dataToShow}
