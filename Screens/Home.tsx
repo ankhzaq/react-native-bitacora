@@ -122,6 +122,9 @@ const Home = () => {
       </Button>
       {showForm && (
         <>
+          <Layout style={styles.titleSection}>
+            <Text category='h5'>FORM</Text>
+          </Layout>
           <Layout style={{ flex: 1, maxHeight: 350 }}>
             <Input
               label='Tag'
@@ -175,6 +178,9 @@ const Home = () => {
         </>
       )}
       <Layout style={{ flex: dateEditionEnabled ? 1 : 2 }}>
+        <Layout style={styles.titleSection}>
+          <Text category='h5'>LIST</Text>
+        </Layout>
         <FlatList
           style={{}}
           data={dataToShow}
@@ -266,7 +272,11 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 20
   },
-
+  titleSection: {
+    height: 64,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   todoIcon:{
     marginTop:5,
     fontSize:20,
