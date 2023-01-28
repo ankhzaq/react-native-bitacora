@@ -7,6 +7,7 @@ import { useNavigation } from '@react-navigation/native';
 import { Item, ItemToShow, ItemWithId } from '../types/item';
 import DateSelector from '../Components/DateSelector';
 import * as ImagePicker from 'expo-image-picker';
+import { ScrollView } from 'react-native-gesture-handler';
 // import { ImagePicker } from 'expo-image-multiple-picker'
 
 const CONSTANT_ITEM = {
@@ -121,7 +122,7 @@ const Home = () => {
         { showForm ? 'Hide Form' : 'Show Form' }
       </Button>
       {showForm && (
-        <>
+        <ScrollView>
           <Layout style={styles.titleSection}>
             <Text category='h5'>FORM</Text>
           </Layout>
@@ -175,7 +176,7 @@ const Home = () => {
             onPress={() => { addItem(); }} style={addBtnDisabled ? {...styles.button, ...styles.buttonDisabled} : styles.button}>
             Add
           </Button>
-        </>
+        </ScrollView>
       )}
       <Layout style={{ flex: dateEditionEnabled ? 1 : 2 }}>
         <Layout style={styles.titleSection}>
