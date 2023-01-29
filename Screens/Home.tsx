@@ -122,7 +122,7 @@ const Home = () => {
         { showForm ? 'Hide Form' : 'Show Form' }
       </Button>
       {showForm && (
-        <ScrollView>
+        <ScrollView style={styles.formLayout}>
           <Layout style={styles.titleSection}>
             <Text category='h5'>FORM</Text>
           </Layout>
@@ -236,6 +236,9 @@ const styles = StyleSheet.create({
     marginHorizontal: 10,
     flexDirection:'row',
     alignItems:'center'
+  },
+  formLayout: {
+    maxHeight: 435,
   },
   innerContainer: {
     alignItems: 'center',
