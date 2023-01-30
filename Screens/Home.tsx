@@ -1,9 +1,8 @@
 import { View, FlatList, StyleSheet, Pressable, Keyboard, Image } from 'react-native'
-import { Layout, Input,  Text, Button } from '@ui-kitten/components';
+import { Button, Input, Layout, Modal, Text } from '@ui-kitten/components';
 import React, { useState, useEffect, useMemo } from 'react'
 import { firebase } from '../config';
 import { FontAwesome } from "@expo/vector-icons";
-import { useNavigation } from '@react-navigation/native';
 import { Item, ItemToShow, ItemWithId } from '../types/item';
 import DateSelector from '../Components/DateSelector';
 import * as ImagePicker from 'expo-image-picker';
@@ -23,7 +22,7 @@ const Home = () => {
   const [tag, setTag] = useState('');
   const [showForm, setShowForm] = useState(true);
   const [title, setTitle] = useState('');
-  const [image, setImage] = useState<string>();
+  const [images, setImages] = useState<string[]>([]);
   const [dateEditionEnabled, setDateEditionEnabled] = useState(false);
   // const navigation = useNavigation();
 
@@ -38,7 +37,7 @@ const Home = () => {
     if (result.cancelled) {
       return;
     }
-    setImage(result.uri);
+    setImages(images.concat([result.uri]));
   }
 
   let date: Date = new Date();
@@ -84,7 +83,7 @@ const Home = () => {
       tag,
       title,
     };
-    if (image) data.images = [image];
+    if (images.length) data.images = images;
     if (!data.title || !data.title.length) delete data.title;
     if (!data.description || !data.description.length) delete data.description;
     dataRef
@@ -118,65 +117,73 @@ const Home = () => {
 
   return (
     <Layout style={{ flex: 1, paddingHorizontal: 10, justifyContent:'space-between' }}>
-      <Button onPress={() => {setShowForm(!showForm)}} style={{ marginLeft: 15 }}>
-        { showForm ? 'Hide Form' : 'Show Form' }
-      </Button>
+      {!showForm && (
+        <Button onPress={() => {setShowForm(!showForm)}} style={{ marginLeft: 15 }}>
+          { showForm ? 'Hide Form' : 'Show Form' }
+        </Button>
+      )}
       {showForm && (
-        <ScrollView style={styles.formLayout}>
-          <Layout style={styles.titleSection}>
-            <Text category='h5'>FORM</Text>
-          </Layout>
-          <Layout style={{ flex: 1, maxHeight: 350 }}>
-            <Input
-              label='Tag'
-              placeholderTextColor="#aaaaaa"
-              onChangeText={(text) => setTag(text)}
-              value={tag}
-              underlineColorAndroid="transparent"
-              autoCapitalize="none"
-            />
-            <Input
-              label='Title'
-              placeholderTextColor="#aaaaaa"
-              onChangeText={(text) => setTitle(text)}
-              value={title}
-              underlineColorAndroid="transparent"
-              autoCapitalize="none"
-            />
-            <Input
-              label='Description'
-              placeholderTextColor="#aaaaaa"
-              onChangeText={(text) => setDescription(text)}
-              value={description}
-              underlineColorAndroid="transparent"
-              autoCapitalize="none"
-            />
-            <DateSelector onChange={onDateChange} onEditDate={setDateEditionEnabled} />
-          </Layout>
-          <Layout style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop: 15 }}>
-            { image && (
-              <Image
-                source={{ uri: image }}
-                style={{ height: 100, width: 100  }}
-              />
-            )}
-            <Layout style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-around', marginTop: 10 }}>
-              <Button onPress={takeAndUploadPhotoAsync}>
-                Upload
-              </Button>
-              { image && (
-                <Button onPress={() => {setImage(undefined)}} style={{ marginLeft: 15 }} status="danger">
-                  Remove Image
-                </Button>
-              )}
+        <Modal
+          style={styles.modal}
+          backdropStyle={styles.backdrop}
+          visible={showForm}
+          onBackdropPress={() => setShowForm(false)}>
+          <ScrollView style={styles.formLayout}>
+            <Layout style={styles.titleSection}>
+              <Text category='h5'>FORM</Text>
             </Layout>
-          </Layout>
-          <Button
-            disabled={addBtnDisabled}
-            onPress={() => { addItem(); }} style={addBtnDisabled ? {...styles.button, ...styles.buttonDisabled} : styles.button}>
-            Add
-          </Button>
-        </ScrollView>
+            <Layout style={{ flex: 1 }}>
+              <Input
+                label='Tag'
+                placeholderTextColor="#aaaaaa"
+                onChangeText={(text) => setTag(text)}
+                value={tag}
+                underlineColorAndroid="transparent"
+                autoCapitalize="none"
+              />
+              <Input
+                label='Title'
+                placeholderTextColor="#aaaaaa"
+                onChangeText={(text) => setTitle(text)}
+                value={title}
+                underlineColorAndroid="transparent"
+                autoCapitalize="none"
+              />
+              <Input
+                label='Description'
+                placeholderTextColor="#aaaaaa"
+                onChangeText={(text) => setDescription(text)}
+                value={description}
+                underlineColorAndroid="transparent"
+                autoCapitalize="none"
+              />
+              <DateSelector onChange={onDateChange} onEditDate={setDateEditionEnabled} />
+              <Layout style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop: 15 }}>
+                <Text>
+                  {(images && images.length) ? images.map((image: string) => (
+                    <Image
+                      source={{ uri: image }}
+                      style={{ height: 100, width: 100  }}
+                    />
+                  )): (<Text>0 images uploaded</Text>)}
+                </Text>
+                <Layout style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-around', marginTop: 10 }}>
+                  <Button onPress={takeAndUploadPhotoAsync}>
+                    Upload
+                  </Button>
+                  <Button onPress={() => {setImages([])}} style={{ marginLeft: 15 }} status="danger" disabled={!images.length}>
+                    Remove Images
+                  </Button>
+                </Layout>
+              </Layout>
+              <Button
+                disabled={addBtnDisabled}
+                onPress={() => { addItem(); }} style={addBtnDisabled ? {...styles.button, ...styles.buttonDisabled} : styles.button}>
+                Add
+              </Button>
+            </Layout>
+          </ScrollView>
+        </Modal>
       )}
       <Layout style={{ flex: dateEditionEnabled ? 1 : 2 }}>
         <Layout style={styles.titleSection}>
@@ -187,7 +194,6 @@ const Home = () => {
           data={dataToShow}
           numColumns={1}
           renderItem={({ item }: { item: ItemToShow }) => {
-            console.log(item.images);
             return (
               <View>
                 <Pressable
@@ -207,13 +213,14 @@ const Home = () => {
                     <Text style={styles.itemHeading}>
                       ({item.count})
                     </Text>
-                    {item.images && (
-                      <Image
-                        source={{ uri: item.images[0] }}
-                        style={{ height: 32, width: 32  }}
-                      />
-                    )}
+
                     <Text style={styles.itemHeading}>
+                      {item.images && item.images.length && item.images.map((image) => (
+                        <Image
+                          source={{ uri: image }}
+                          style={{ height: 32, width: 32  }}
+                        />
+                      ))}
                       {item.tag}{item.title && ` - ${item.title}`}
                     </Text>
                   </View>
@@ -228,6 +235,9 @@ const Home = () => {
 }
 
 const styles = StyleSheet.create({
+  backdrop: {
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
   container: {
     backgroundColor: '#e5e5e5',
     padding: 15,
@@ -238,7 +248,7 @@ const styles = StyleSheet.create({
     alignItems:'center'
   },
   formLayout: {
-    maxHeight: 435,
+    height: '100%'
   },
   innerContainer: {
     alignItems: 'center',
@@ -248,7 +258,7 @@ const styles = StyleSheet.create({
   },
   itemHeading: {
     fontWeight: 'bold',
-    fontSize:18,
+    fontSize: 18,
     marginHorizontal: 5,
   },
   formContainer: {
@@ -257,6 +267,10 @@ const styles = StyleSheet.create({
     marginLeft:10,
     marginRight: 10,
     marginTop:100
+  },
+  modal: {
+    minHeight: '100%',
+    width: '90%',
   },
   button: {
     height: 47,
@@ -285,11 +299,8 @@ const styles = StyleSheet.create({
     marginTop:5,
     fontSize:20,
     marginLeft:14,
-  },
+  }
 });
 
 export default Home
-function setImage(localUri: string) {
-    throw new Error('Function not implemented.');
-}
 
