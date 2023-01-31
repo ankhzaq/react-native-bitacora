@@ -7,6 +7,7 @@ import { Item, ItemToShow, ItemWithId } from '../types/item';
 import DateSelector from '../Components/DateSelector';
 import * as ImagePicker from 'expo-image-picker';
 import { ScrollView } from 'react-native-gesture-handler';
+import ImageItem from '../Components/ImageItem';
 // import { ImagePicker } from 'expo-image-multiple-picker'
 
 const CONSTANT_ITEM = {
@@ -132,7 +133,7 @@ const Home = () => {
             <Layout style={styles.titleSection}>
               <Text category='h5'>FORM</Text>
             </Layout>
-            <Layout style={{ flex: 1 }}>
+            <Layout style={{ flex: 1, padding: 10 }}>
               <Input
                 label='Tag'
                 placeholderTextColor="#aaaaaa"
@@ -208,19 +209,17 @@ const Home = () => {
                   <FontAwesome name="trash-o"
                                color="red"
                                onPress={() => deleteItem(item)}
-                               style={styles.todoIcon} />
+                               style={styles.trashIcon} />
                   <View style={styles.innerContainer}>
                     <Text style={styles.itemHeading}>
                       ({item.count})
                     </Text>
-
+                    {item.images && item.images.length && item.images.map((image) => (
+                      <ImageItem
+                        image={image}
+                      />
+                    ))}
                     <Text style={styles.itemHeading}>
-                      {item.images && item.images.length && item.images.map((image) => (
-                        <Image
-                          source={{ uri: image }}
-                          style={{ height: 32, width: 32  }}
-                        />
-                      ))}
                       {item.tag}{item.title && ` - ${item.title}`}
                     </Text>
                   </View>
@@ -248,7 +247,7 @@ const styles = StyleSheet.create({
     alignItems:'center'
   },
   formLayout: {
-    height: '100%'
+    height: '100%',
   },
   innerContainer: {
     alignItems: 'center',
@@ -295,7 +294,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  todoIcon:{
+  trashIcon:{
     marginTop:5,
     fontSize:20,
     marginLeft:14,
