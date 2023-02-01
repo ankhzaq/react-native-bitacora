@@ -71,7 +71,7 @@ const DateSelector = ({
           }}
           style={{ marginLeft: 15, marginTop: 15 }}
         >
-          Change
+          Change date
         </Button>
       </Layout>
     )

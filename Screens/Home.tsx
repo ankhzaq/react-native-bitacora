@@ -58,6 +58,7 @@ const Home = () => {
             const item = doc.data()
             initialData.push({ id: doc.id, ...item})
           })
+          console.log('initialData: ', initialData);
           setData(initialData);
         })
   }, []);
@@ -84,7 +85,7 @@ const Home = () => {
       tag,
       title,
     };
-    if (images.length) data.images = images;
+    if (images && images.length) data.images = images;
     if (!data.title || !data.title.length) delete data.title;
     if (!data.description || !data.description.length) delete data.description;
     dataRef
@@ -95,11 +96,25 @@ const Home = () => {
         setDescription('');
         // release keyboard
         Keyboard.dismiss();
+
+        setImages([]);
+        setShowForm(false);
       })
       .catch((error) => {
         // show an alert in case of error
         alert(error);
       });
+  }
+
+  const updateItem = (id, newProps) => {
+    dataRef
+      .doc(id)
+      .update(newProps).then(() => {
+        alert('Updated successfully')
+    }).catch((error) => {
+      alert(error.message)
+    })
+
   }
 
   const dataToShow = useMemo(() => {
@@ -214,11 +229,15 @@ const Home = () => {
                     <Text style={styles.itemHeading}>
                       ({item.count})
                     </Text>
-                    {item.images && item.images.length && item.images.map((image) => (
+                    {(item.images && item.images.length) ? item.images.map((image) => (
                       <ImageItem
                         image={image}
+                        onRemoveImage={() => {
+                          const nextImages = item.images.filter((imageItem) => imageItem !== image);
+                          updateItem(item.id, { ...item, images: nextImages });
+                        }}
                       />
-                    ))}
+                    )) : <Text></Text>}
                     <Text style={styles.itemHeading}>
                       {item.tag}{item.title && ` - ${item.title}`}
                     </Text>

@@ -5,16 +5,24 @@ import { FontAwesome } from '@expo/vector-icons';
 
 interface Props {
   image?: string;
+  onRemoveImage?: (image: string) => void;
 }
 
-const ImageItem = ({ image }: Props) => (
+const ImageItem = ({ image, onRemoveImage }: Props) => (
   <Layout>
     <Image
       source={{ uri: image }}
       style={{ height: 100, width: 100 }}
     />
     <Layout style={styles.trashWrapper}>
-      <FontAwesome name="trash" color="red" onPress={() => {}} style={styles.trashIcon} />
+      <FontAwesome
+        name="trash"
+        color="red"
+        onPress={() => {
+          if (onRemoveImage) onRemoveImage(image);
+        }}
+        style={styles.trashIcon}
+      />
     </Layout>
   </Layout>
 );
