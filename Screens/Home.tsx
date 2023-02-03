@@ -1,4 +1,4 @@
-import { View, FlatList, StyleSheet, Pressable, Keyboard, Image } from 'react-native'
+import { AlertIOS, View, FlatList, StyleSheet, Pressable, Keyboard, Image } from 'react-native'
 import { Button, Input, Layout, Modal, Text } from '@ui-kitten/components';
 import React, { useState, useEffect, useMemo } from 'react'
 import { firebase } from '../config';
@@ -6,9 +6,9 @@ import { FontAwesome } from "@expo/vector-icons";
 import { Item, ItemToShow, ItemWithId } from '../types/item';
 import DateSelector from '../Components/DateSelector';
 import * as ImagePicker from 'expo-image-picker';
-import { ScrollView } from 'react-native-gesture-handler';
+import { ScrollView, TouchableHighlight } from 'react-native-gesture-handler';
 import ImageItem from '../Components/ImageItem';
-// import { ImagePicker } from 'expo-image-multiple-picker'
+import TouchID from 'react-native-touch-id'
 
 const CONSTANT_ITEM = {
   email: "darthzaq@gmail.com",
@@ -26,6 +26,22 @@ const Home = () => {
   const [images, setImages] = useState<string[]>([]);
   const [dateEditionEnabled, setDateEditionEnabled] = useState(false);
   // const navigation = useNavigation();
+
+  const optionalConfigObject = {
+    title: "Authentication Required", // Android
+    color: "#e00606", // Android,
+    fallbackLabel: "Show Passcode" // iOS (if empty, then label is hidden)
+  }
+
+  const pressHandler = () => {
+    TouchID.authenticate('to demo this react-native component', optionalConfigObject)
+      .then(success => {
+        AlertIOS.alert('Authenticated Successfully');
+      })
+      .catch(error => {
+        AlertIOS.alert('Authentication Failed');
+      });
+  }
 
   const takeAndUploadPhotoAsync = async () => {
     // Display the camera to the user and wait for them to take a photo or to cancel
@@ -133,6 +149,11 @@ const Home = () => {
 
   return (
     <Layout style={{ flex: 1, paddingHorizontal: 10, justifyContent:'space-between' }}>
+      <TouchableHighlight onPress={pressHandler}>
+        <Text>
+          Authenticate with Touch ID
+        </Text>
+      </TouchableHighlight>
       {!showForm && (
         <Button onPress={() => {setShowForm(!showForm)}} style={{ marginLeft: 15 }}>
           { showForm ? 'Hide Form' : 'Show Form' }
