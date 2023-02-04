@@ -1,4 +1,4 @@
-import { AlertIOS, View, FlatList, StyleSheet, Pressable, Keyboard, Image } from 'react-native'
+import { View, FlatList, StyleSheet, Pressable, Keyboard, Image } from 'react-native'
 import { Button, Input, Layout, Modal, Text } from '@ui-kitten/components';
 import React, { useState, useEffect, useMemo } from 'react'
 import { firebase } from '../config';
@@ -8,7 +8,7 @@ import DateSelector from '../Components/DateSelector';
 import * as ImagePicker from 'expo-image-picker';
 import { ScrollView, TouchableHighlight } from 'react-native-gesture-handler';
 import ImageItem from '../Components/ImageItem';
-import TouchID from 'react-native-touch-id'
+import * as LocalAuthentication from 'expo-local-authentication';
 
 const CONSTANT_ITEM = {
   email: "darthzaq@gmail.com",
@@ -27,20 +27,20 @@ const Home = () => {
   const [dateEditionEnabled, setDateEditionEnabled] = useState(false);
   // const navigation = useNavigation();
 
-  const optionalConfigObject = {
-    title: "Authentication Required", // Android
-    color: "#e00606", // Android,
-    fallbackLabel: "Show Passcode" // iOS (if empty, then label is hidden)
-  }
+  const pressHandler = async () => {
 
-  const pressHandler = () => {
-    TouchID.authenticate('to demo this react-native component', optionalConfigObject)
-      .then(success => {
-        AlertIOS.alert('Authenticated Successfully');
-      })
-      .catch(error => {
-        AlertIOS.alert('Authentication Failed');
+    try {
+      LocalAuthentication.authenticateAsync({
+        promptMessage: 'Face ID'
+      }).then(({ success }) => {
+        console.log('then');
+        console.log('success: ', success);
+      }).catch(() => {
+        console.log('catch');
       });
+    } catch(e) {
+      console.log('e: ', e);
+    }
   }
 
   const takeAndUploadPhotoAsync = async () => {
@@ -151,7 +151,7 @@ const Home = () => {
     <Layout style={{ flex: 1, paddingHorizontal: 10, justifyContent:'space-between' }}>
       <TouchableHighlight onPress={pressHandler}>
         <Text>
-          Authenticate with Touch ID
+          Authenticate with Face ID
         </Text>
       </TouchableHighlight>
       {!showForm && (
