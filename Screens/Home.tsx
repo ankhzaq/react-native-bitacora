@@ -6,7 +6,7 @@ import { FontAwesome } from "@expo/vector-icons";
 import { Item, ItemToShow, ItemWithId } from '../types/item';
 import DateSelector from '../Components/DateSelector';
 import * as ImagePicker from 'expo-image-picker';
-import { ScrollView, TouchableHighlight } from 'react-native-gesture-handler';
+import { ScrollView } from 'react-native-gesture-handler';
 import ImageItem from '../Components/ImageItem';
 import * as LocalAuthentication from 'expo-local-authentication';
 
@@ -149,11 +149,7 @@ const Home = () => {
 
   return (
     <Layout style={{ flex: 1, paddingHorizontal: 10, justifyContent:'space-between' }}>
-      <TouchableHighlight onPress={pressHandler}>
-        <Text>
-          Authenticate with Face ID
-        </Text>
-      </TouchableHighlight>
+      <FontAwesome name="user-o" onPress={pressHandler} style={{ margin: 15 }} />
       {!showForm && (
         <Button onPress={() => {setShowForm(!showForm)}} style={{ marginLeft: 15 }}>
           { showForm ? 'Hide Form' : 'Show Form' }
