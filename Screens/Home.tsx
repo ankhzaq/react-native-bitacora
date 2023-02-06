@@ -21,7 +21,7 @@ const Home = () => {
   const dataRef = firebase.firestore().collection('bitacora');
   const [description, setDescription] = useState('');
   const [tag, setTag] = useState('');
-  const [showForm, setShowForm] = useState(true);
+  const [showForm, setShowForm] = useState(false);
   const [title, setTitle] = useState('');
   const [images, setImages] = useState<string[]>([]);
   const [dateEditionEnabled, setDateEditionEnabled] = useState(false);
