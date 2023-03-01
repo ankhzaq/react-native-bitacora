@@ -28,7 +28,6 @@ const Home = () => {
   // const navigation = useNavigation();
 
   const pressHandler = async () => {
-
     try {
       LocalAuthentication.authenticateAsync({
         promptMessage: 'Face ID'
@@ -98,7 +97,7 @@ const Home = () => {
       createdAt: date,
       description,
       ...CONSTANT_ITEM,
-      tag,
+      tag: [tag],
       title,
     };
     if (images && images.length) data.images = images;
