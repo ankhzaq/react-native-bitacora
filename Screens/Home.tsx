@@ -1,4 +1,4 @@
-import { View, FlatList, StyleSheet, Pressable, Keyboard, Image } from 'react-native'
+import { View, FlatList, StyleSheet, Pressable, Keyboard, Image, TouchableWithoutFeedback } from 'react-native'
 import { Button, Input, Layout, Modal, Text } from '@ui-kitten/components';
 import React, { useState, useEffect, useMemo } from 'react'
 import { firebase } from '../config';
@@ -21,6 +21,7 @@ const Home = () => {
   const dataRef = firebase.firestore().collection('bitacora');
   const [description, setDescription] = useState('');
   const [tag, setTag] = useState('');
+  const [clues, setClues] = useState(['']);
   const [showForm, setShowForm] = useState(false);
   const [title, setTitle] = useState('');
   const [images, setImages] = useState<string[]>([]);
@@ -68,12 +69,11 @@ const Home = () => {
       .orderBy('createdAt', 'desc')
       .onSnapshot(
         querySnapshot => {
-          const initialData = []
+          const initialData = [];
           querySnapshot.forEach((doc) => {
             const item = doc.data()
             initialData.push({ id: doc.id, ...item})
-          })
-          console.log('initialData: ', initialData);
+          });
           setData(initialData);
         })
   }, []);
@@ -97,7 +97,7 @@ const Home = () => {
       createdAt: date,
       description,
       ...CONSTANT_ITEM,
-      tag: [tag],
+      tag: tag.split(','),
       title,
     };
     if (images && images.length) data.images = images;
@@ -146,6 +146,29 @@ const Home = () => {
 
   const addBtnDisabled = !tag;
 
+  const renderIconClueIcon = (props, index) => {
+    const removeClue = () => {
+      const nextClues = JSON.parse(JSON.stringify(clues));
+      nextClues.splice(index, 1);
+      setClues(nextClues);
+    }
+
+    const addClue = () => {
+      setClues(clues.concat(['']));
+    }
+
+    return (
+      <>
+        {!!index && (
+          <FontAwesome name="trash" onPress={removeClue} style={{ marginRight: 15 }} />
+        )}
+        {index === (clues.length - 1) && (
+          <FontAwesome name="plus-circle" onPress={addClue} style={{ marginRight: 15 }} />
+        )}
+      </>
+    )
+  };
+
   return (
     <Layout style={{ flex: 1, paddingHorizontal: 10, justifyContent:'space-between' }}>
       <FontAwesome name="user-o" onPress={pressHandler} style={{ margin: 15 }} />
@@ -168,7 +191,9 @@ const Home = () => {
               <Input
                 label='Tag'
                 placeholderTextColor="#aaaaaa"
-                onChangeText={(text) => setTag(text)}
+                onChangeText={(text) => {
+                  return setTag(text);
+                }}
                 value={tag}
                 underlineColorAndroid="transparent"
                 autoCapitalize="none"
@@ -181,6 +206,22 @@ const Home = () => {
                 underlineColorAndroid="transparent"
                 autoCapitalize="none"
               />
+              {
+                clues.map((clue, index) => (
+                  <Input
+                    accessoryRight={(props) => renderIconClueIcon(props, index)}
+                    label='Clue'
+                    onChangeText={(text) => {
+                      const nextClues = JSON.parse(JSON.stringify(clues));
+                      nextClues[index] = text;
+                      setClues(nextClues)
+                    }}
+                    value={clue}
+                    underlineColorAndroid="transparent"
+                    autoCapitalize="none"
+                  />
+                ))
+              }
               <Input
                 label='Description'
                 placeholderTextColor="#aaaaaa"

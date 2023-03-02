@@ -4,7 +4,7 @@ export interface Item {
   email: string;
   images?: string[];
   private: boolean;
-  tag: [string];
+  tag: string[];
   title?: string;
 }
 
