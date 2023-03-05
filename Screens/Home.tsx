@@ -1,7 +1,7 @@
 import { View, FlatList, StyleSheet, Pressable, Keyboard, Image, TouchableWithoutFeedback } from 'react-native'
 import { Button, Input, Layout, Modal, Text } from '@ui-kitten/components';
 import React, { useState, useEffect, useMemo } from 'react'
-import { firebase } from '../config';
+import { apiConfig, firebase } from '../config';
 import { FontAwesome } from "@expo/vector-icons";
 import { Item, ItemToShow, ItemWithId } from '../types/item';
 import DateSelector from '../Components/DateSelector';
@@ -15,6 +15,7 @@ const CONSTANT_ITEM = {
   private: false,
 }
 
+let timeOut = null;
 
 const Home = () => {
   const [data, setData] = useState([]);
@@ -26,6 +27,7 @@ const Home = () => {
   const [title, setTitle] = useState('');
   const [images, setImages] = useState<string[]>([]);
   const [dateEditionEnabled, setDateEditionEnabled] = useState(false);
+
   // const navigation = useNavigation();
 
   const pressHandler = async () => {
@@ -40,6 +42,15 @@ const Home = () => {
       });
     } catch(e) {
       console.log('e: ', e);
+    }
+  }
+
+  const handleGetImages = async () => {
+    if (title.length) {
+      const response = await fetch(`${apiConfig.baseUrl}?q=${title}&tbm=${apiConfig.tbm}&ijn=${apiConfig.ijn}&api_key=${apiConfig.api_key}`);
+      const data = await response.json();
+      const nextImages = data.images_results.map((image) => image.original).slice(0,5);
+      setImages(nextImages)
     }
   }
 
@@ -201,7 +212,11 @@ const Home = () => {
               <Input
                 label='Title'
                 placeholderTextColor="#aaaaaa"
-                onChangeText={(text) => setTitle(text)}
+                onChangeText={(text) => {
+                  setTitle(text);
+                  clearTimeout(timeOut);
+                  timeOut = setTimeout(handleGetImages, 1500)
+                }}
                 value={title}
                 underlineColorAndroid="transparent"
                 autoCapitalize="none"
