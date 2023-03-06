@@ -22,7 +22,10 @@ const Home = () => {
   const dataRef = firebase.firestore().collection('bitacora');
   const [description, setDescription] = useState('');
   const [tag, setTag] = useState('');
-  const [clues, setClues] = useState(['']);
+  const [clues, setClues] = useState([{
+    question: '',
+    answer: '',
+  }]);
   const [showForm, setShowForm] = useState(false);
   const [title, setTitle] = useState('');
   const [images, setImages] = useState<string[]>([]);
@@ -223,18 +226,32 @@ const Home = () => {
               />
               {
                 clues.map((clue, index) => (
-                  <Input
-                    accessoryRight={(props) => renderIconClueIcon(props, index)}
-                    label='Clue'
-                    onChangeText={(text) => {
-                      const nextClues = JSON.parse(JSON.stringify(clues));
-                      nextClues[index] = text;
-                      setClues(nextClues)
-                    }}
-                    value={clue}
-                    underlineColorAndroid="transparent"
-                    autoCapitalize="none"
-                  />
+                  <>
+                    <Input
+                      accessoryRight={(props) => renderIconClueIcon(props, index)}
+                      label='Clue Question'
+                      onChangeText={(text) => {
+                        const nextClues = JSON.parse(JSON.stringify(clues));
+                        nextClues[index].title = text;
+                        setClues(nextClues)
+                      }}
+                      value={clue.question}
+                      underlineColorAndroid="transparent"
+                      autoCapitalize="none"
+                    />
+                    <Input
+                      accessoryRight={(props) => renderIconClueIcon(props, index)}
+                      label='Clue Answer'
+                      onChangeText={(text) => {
+                        const nextClues = JSON.parse(JSON.stringify(clues));
+                        nextClues[index].description = text;
+                        setClues(nextClues)
+                      }}
+                      value={clue.answer}
+                      underlineColorAndroid="transparent"
+                      autoCapitalize="none"
+                    />
+                  </>
                 ))
               }
               <Input

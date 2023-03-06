@@ -1,5 +1,11 @@
+interface Clue {
+  question: string;
+  answer: string;
+}
+
 export interface Item {
-  createdAt: Date,
+  createdAt: Date;
+  clues?: Clue[];
   description?: string;
   email: string;
   images?: string[];
