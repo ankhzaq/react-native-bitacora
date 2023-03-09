@@ -2,7 +2,7 @@ import { Image, Keyboard, StyleSheet, View } from 'react-native'
 import React, { useState } from 'react';
 import { Button, Input, Layout, Modal, Text } from '@ui-kitten/components';
 import { FontAwesome } from '@expo/vector-icons';
-import { ScrollView } from 'react-native-gesture-handler';
+import { ScrollView, TouchableHighlight } from 'react-native-gesture-handler';
 import DateSelector from './DateSelector';
 import { apiConfig, firebase } from '../config';
 import * as ImagePicker from 'expo-image-picker';
@@ -33,6 +33,7 @@ const ItemModal = ({ onClose, showForm }: Props) => {
   const [clues, setClues] = useState([initialClueState]);
   const [title, setTitle] = useState('');
   const [images, setImages] = useState<string[]>([]);
+  const [imagesSelected, setImagesSelected] = useState<string[]>([]);
 
   const addItem = (dataPressed?: Item) => {
     const data: Item = dataPressed || {
@@ -114,8 +115,24 @@ const ItemModal = ({ onClose, showForm }: Props) => {
     if (result.cancelled) {
       return;
     }
-    setImages(images.concat([result.uri]));
+
+    setImagesSelected(imagesSelected.concat([result.uri]));
   }
+
+  const selectImage = (nextImage: string) => {
+    const imageIndexAlreadySelected = imagesSelected.findIndex(image => nextImage === image);
+    const nextSelectedImages = JSON.parse(JSON.stringify(imagesSelected));
+
+    if (imageIndexAlreadySelected >= 0) {
+      nextSelectedImages.slice(imageIndexAlreadySelected, 1);
+    } else {
+      nextSelectedImages.push(nextImage);
+    }
+
+    setImagesSelected(nextSelectedImages);
+  }
+
+  const imagesToShow = (images && images.length) && images.filter(image => !imagesSelected.find(img => image === img));
 
   return (
     <Modal
@@ -197,11 +214,15 @@ const ItemModal = ({ onClose, showForm }: Props) => {
           <DateSelector onChange={onDateChange} />
           <Layout style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop: 15 }}>
             <Text>
-              {(images && images.length) ? images.map((image: string) => (
-                <Image
-                  source={{ uri: image }}
-                  style={{ height: 100, width: 100  }}
-                />
+              {imagesToShow ? imagesToShow.map((image: string) => (
+                <TouchableHighlight onPress={() => {
+                  selectImage(image);
+                }}>
+                  <Image
+                    source={{ uri: image }}
+                    style={{ height: 100, width: 100  }}
+                  />
+                </TouchableHighlight>
               )): (<Text>0 images uploaded</Text>)}
             </Text>
             <Layout style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-around', marginTop: 10 }}>
