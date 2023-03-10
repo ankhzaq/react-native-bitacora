@@ -7,6 +7,7 @@ import DateSelector from './DateSelector';
 import { apiConfig, firebase } from '../config';
 import * as ImagePicker from 'expo-image-picker';
 import { Item } from '../types/item';
+import { useNavigation } from '@react-navigation/native';
 
 interface Props {
   addItem?: (data: Item) => void;
@@ -35,6 +36,8 @@ const ItemModal = ({ onClose, showForm }: Props) => {
   const [images, setImages] = useState<string[]>([]);
   const [imagesSelected, setImagesSelected] = useState<string[]>([]);
 
+  const navigation = useNavigation();
+
   const addItem = (dataPressed?: Item) => {
     const data: Item = dataPressed || {
       createdAt: date,
@@ -62,6 +65,7 @@ const ItemModal = ({ onClose, showForm }: Props) => {
         // show an alert in case of error
         alert(error);
       });
+    navigation.navigate('Home')
   }
 
   const handleGetImages = async () => {
@@ -124,7 +128,7 @@ const ItemModal = ({ onClose, showForm }: Props) => {
     const nextSelectedImages = JSON.parse(JSON.stringify(imagesSelected));
 
     if (imageIndexAlreadySelected >= 0) {
-      nextSelectedImages.slice(imageIndexAlreadySelected, 1);
+      nextSelectedImages.splice(imageIndexAlreadySelected, 1);
     } else {
       nextSelectedImages.push(nextImage);
     }
@@ -135,113 +139,125 @@ const ItemModal = ({ onClose, showForm }: Props) => {
   const imagesToShow = (images && images.length) && images.filter(image => !imagesSelected.find(img => image === img));
 
   return (
-    <Modal
-      style={styles.modal}
-      backdropStyle={styles.backdrop}
-      visible={showForm}
-      onBackdropPress={onClose}>
-      <ScrollView style={styles.formLayout}>
-        <Layout style={styles.titleSection}>
-          <Text category='h5'>FORM</Text>
-        </Layout>
-        <Layout style={{ flex: 1, padding: 10 }}>
-          <Input
-            label='Tag'
-            placeholderTextColor="#aaaaaa"
-            onChangeText={(text) => {
-              return setTag(text);
-            }}
-            value={tag}
-            underlineColorAndroid="transparent"
-            autoCapitalize="none"
-          />
-          <Input
-            label='Title'
-            placeholderTextColor="#aaaaaa"
-            onChangeText={(text) => {
-              setTitle(text);
-              clearTimeout(timeOut);
-              timeOut = setTimeout(handleGetImages, 1500)
-            }}
-            value={title}
-            underlineColorAndroid="transparent"
-            autoCapitalize="none"
-          />
-          <Text style={styles.cluesText}>
-            Clues
+    <ScrollView style={styles.formLayout}>
+      <Layout style={styles.titleSection}>
+        <Text category='h5'>FORM</Text>
+      </Layout>
+      <Layout style={{ flex: 1, padding: 10 }}>
+        <Input
+          label='Tag'
+          placeholderTextColor="#aaaaaa"
+          onChangeText={(text) => {
+            return setTag(text);
+          }}
+          value={tag}
+          underlineColorAndroid="transparent"
+          autoCapitalize="none"
+        />
+        <Input
+          label='Title'
+          placeholderTextColor="#aaaaaa"
+          onChangeText={(text) => {
+            setTitle(text);
+            clearTimeout(timeOut);
+            timeOut = setTimeout(handleGetImages, 1500)
+          }}
+          value={title}
+          underlineColorAndroid="transparent"
+          autoCapitalize="none"
+        />
+        <Text style={styles.cluesText}>
+          Clues
+        </Text>
+        {
+          clues.map((clue, index) => (
+            <View>
+              <Layout style={styles.cluesWrapper}>
+                <Input
+                  size='small'
+                  label={`Question - ${index}`}
+                  onChangeText={(text) => {
+                    const nextClues = JSON.parse(JSON.stringify(clues));
+                    nextClues[index].question = text;
+                    setClues(nextClues)
+                  }}
+                  value={clue.question}
+                  underlineColorAndroid="transparent"
+                  autoCapitalize="none"
+                />
+                <Input
+                  accessoryRight={(props) => renderIconClueIcon(props, index)}
+                  label={`Answer - ${index}`}
+                  onChangeText={(text) => {
+                    const nextClues = JSON.parse(JSON.stringify(clues));
+                    nextClues[index].answer = text;
+                    setClues(nextClues)
+                  }}
+                  size='small'
+                  value={clue.answer}
+                  underlineColorAndroid="transparent"
+                  autoCapitalize="none"
+                />
+              </Layout>
+            </View>
+          ))
+        }
+        <Input
+          label='Description'
+          placeholderTextColor="#aaaaaa"
+          onChangeText={(text) => setDescription(text)}
+          value={description}
+          underlineColorAndroid="transparent"
+          autoCapitalize="none"
+        />
+        <DateSelector onChange={onDateChange} />
+        <Layout style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop: 15 }}>
+          {(imagesSelected && imagesSelected.length) ? imagesSelected.map((image: string) => (
+            <TouchableHighlight onPress={() => {
+              selectImage(image);
+            }}>
+              <Image
+                source={{ uri: image }}
+                style={{ height: 100, width: 100  }}
+              />
+            </TouchableHighlight>
+          )): (<Text>0 images selected</Text>)}
+          <Text>
+            {imagesToShow ? imagesToShow.map((image: string) => (
+              <TouchableHighlight onPress={() => {
+                selectImage(image);
+              }}>
+                <Image
+                  source={{ uri: image }}
+                  style={{ height: 100, width: 100  }}
+                />
+              </TouchableHighlight>
+            )): (<Text>0 images uploaded</Text>)}
           </Text>
-          {
-            clues.map((clue, index) => (
-              <View>
-                <Layout style={styles.cluesWrapper}>
-                  <Input
-                    size='small'
-                    label={`Question - ${index}`}
-                    onChangeText={(text) => {
-                      const nextClues = JSON.parse(JSON.stringify(clues));
-                      nextClues[index].question = text;
-                      setClues(nextClues)
-                    }}
-                    value={clue.question}
-                    underlineColorAndroid="transparent"
-                    autoCapitalize="none"
-                  />
-                  <Input
-                    accessoryRight={(props) => renderIconClueIcon(props, index)}
-                    label={`Answer - ${index}`}
-                    onChangeText={(text) => {
-                      const nextClues = JSON.parse(JSON.stringify(clues));
-                      nextClues[index].answer = text;
-                      setClues(nextClues)
-                    }}
-                    size='small'
-                    value={clue.answer}
-                    underlineColorAndroid="transparent"
-                    autoCapitalize="none"
-                  />
-                </Layout>
-              </View>
-            ))
-          }
-          <Input
-            label='Description'
-            placeholderTextColor="#aaaaaa"
-            onChangeText={(text) => setDescription(text)}
-            value={description}
-            underlineColorAndroid="transparent"
-            autoCapitalize="none"
-          />
-          <DateSelector onChange={onDateChange} />
-          <Layout style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop: 15 }}>
-            <Text>
-              {imagesToShow ? imagesToShow.map((image: string) => (
-                <TouchableHighlight onPress={() => {
-                  selectImage(image);
-                }}>
-                  <Image
-                    source={{ uri: image }}
-                    style={{ height: 100, width: 100  }}
-                  />
-                </TouchableHighlight>
-              )): (<Text>0 images uploaded</Text>)}
-            </Text>
-            <Layout style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-around', marginTop: 10 }}>
-              <Button onPress={takeAndUploadPhotoAsync}>
-                Upload
-              </Button>
-              <Button onPress={() => {setImages([])}} style={{ marginLeft: 15 }} status="danger" disabled={!images.length}>
-                Remove Images
-              </Button>
-            </Layout>
+          <Layout style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-around', marginTop: 10 }}>
+            <Button onPress={takeAndUploadPhotoAsync}>
+              Upload
+            </Button>
+            <Button onPress={() => {setImages([])}} style={{ marginLeft: 15 }} status="danger" disabled={!images.length}>
+              Remove Images
+            </Button>
           </Layout>
-          <Button
-            disabled={!tag}
-            onPress={() => { addItem(); }} style={!tag ? {...styles.button, ...styles.buttonDisabled} : styles.button}>
-            Add
-          </Button>
         </Layout>
-      </ScrollView>
-    </Modal>
+        <Button
+          onPress={() => {
+            navigation.navigate('Home');
+          }}
+          style={styles.button}
+        >
+          Back
+        </Button>
+        <Button
+          disabled={!tag}
+          onPress={() => { addItem(); }} style={!tag ? {...styles.button, ...styles.buttonDisabled} : styles.button}>
+          Add
+        </Button>
+      </Layout>
+    </ScrollView>
   );
 };
 

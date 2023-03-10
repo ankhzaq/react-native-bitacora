@@ -6,6 +6,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 
 import Home from './Screens/Home';
 import Detail from './Screens/Detail';
+import ItemModal from './Components/ItemModal';
 
 const Stack = createStackNavigator()
 
@@ -22,6 +23,10 @@ export default function App() {
             <Stack.Screen
               name='Detail'
               component={Detail}
+            />
+            <Stack.Screen
+              name='NewItem'
+              component={ItemModal}
             />
           </Stack.Navigator>
         </NavigationContainer>

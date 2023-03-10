@@ -10,6 +10,7 @@ import { ScrollView } from 'react-native-gesture-handler';
 import ImageItem from '../Components/ImageItem';
 import * as LocalAuthentication from 'expo-local-authentication';
 import ItemModal from '../Components/ItemModal';
+import { useNavigation } from '@react-navigation/native';
 
 const CONSTANT_ITEM = {
   email: "darthzaq@gmail.com",
@@ -26,9 +27,8 @@ const initialClueState = {
 const Home = () => {
   const [data, setData] = useState([]);
   const dataRef = firebase.firestore().collection('bitacora');
-  const [showForm, setShowForm] = useState(true);
 
-  // const navigation = useNavigation();
+  const navigation = useNavigation();
 
   const pressHandler = async () => {
     try {
@@ -82,7 +82,6 @@ const Home = () => {
       .then(() => {
         // release keyboard
         Keyboard.dismiss();
-        setShowForm(false);
       })
       .catch((error) => {
         // show an alert in case of error
@@ -114,12 +113,16 @@ const Home = () => {
   }, [data]);
 
   return (
-    <Layout style={{ flex: 1, paddingHorizontal: 10, justifyContent:'space-between' }}>
+    <Layout style={{ flex: 1, paddingHorizontal: 10 }}>
       <FontAwesome name="user-o" onPress={pressHandler} style={{ margin: 15 }} />
-      <Button onPress={() => {setShowForm(true)}} style={{ marginLeft: 15 }}>
-        Show Form
+      <Button
+        onPress={() => {
+          navigation.navigate('NewItem');
+        }}
+        style={{ marginLeft: 15 }}
+      >
+        Add Item
       </Button>
-      <ItemModal showForm={showForm} onClose={() => setShowForm(false)} />
       <Layout>
         <Layout style={styles.titleSection}>
           <Text category='h5'>LIST</Text>
