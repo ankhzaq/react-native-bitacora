@@ -1,19 +1,13 @@
 import { Image, Keyboard, StyleSheet, View } from 'react-native'
 import React, { useState } from 'react';
-import { Button, Input, Layout, Modal, Text } from '@ui-kitten/components';
+import { Button, Input, Layout, Text } from '@ui-kitten/components';
 import { FontAwesome } from '@expo/vector-icons';
 import { ScrollView, TouchableHighlight } from 'react-native-gesture-handler';
 import DateSelector from './DateSelector';
 import { apiConfig, firebase } from '../config';
 import * as ImagePicker from 'expo-image-picker';
-import { Item } from '../types/item';
+import { Item, ItemWithId } from '../types/item';
 import { useNavigation } from '@react-navigation/native';
-
-interface Props {
-  addItem?: (data: Item) => void;
-  onClose?: () => void;
-  showForm?: boolean;
-}
 
 let timeOut = null;
 
@@ -27,44 +21,52 @@ const CONSTANT_ITEM = {
   private: false,
 }
 
-const ItemModal = ({ onClose, showForm }: Props) => {
+const ItemModal = ({ route }) => {
+  const dataItem: ItemWithId = route.params.data;
+  const isEditMode = !!dataItem;
+
+  let date: Date = new Date();
+
   const dataRef = firebase.firestore().collection('bitacora');
-  const [description, setDescription] = useState('');
-  const [tag, setTag] = useState('');
-  const [clues, setClues] = useState([initialClueState]);
-  const [title, setTitle] = useState('');
+  const [description, setDescription] = useState(dataItem?.description || '');
+  const [tag, setTag] = useState(dataItem ? `${dataItem?.tag}` :'');
+  const [clues, setClues] = useState(dataItem?.clues || [initialClueState]);
+  const [title, setTitle] = useState(dataItem?.title || '');
   const [images, setImages] = useState<string[]>([]);
-  const [imagesSelected, setImagesSelected] = useState<string[]>([]);
+  const [imagesSelected, setImagesSelected] = useState<string[]>(dataItem?.images || []);
 
   const navigation = useNavigation();
 
   const addItem = (dataPressed?: Item) => {
     const data: Item = dataPressed || {
-      createdAt: date,
+      createdAt: dataItem?.createdAt || date,
       description,
       ...CONSTANT_ITEM,
       tag: tag.split(','),
       title,
     };
-    if (images && images.length) data.images = images;
-    if (!data.title || !data.title.length) delete data.title;
-    if (!data.description || !data.description.length) delete data.description;
-    dataRef
-      .add(data)
-      .then(() => {
-        // release todo state
-        setTitle('');
-        setDescription('');
-        // release keyboard
-        Keyboard.dismiss();
+    if (isEditMode) {
+      data.updatedAt = date;
+    }
 
-        setImages([]);
-        onClose();
-      })
-      .catch((error) => {
-        // show an alert in case of error
-        alert(error);
-      });
+    if (imagesSelected && imagesSelected.length) data.images = imagesSelected;
+    if (!data.title || !data.title.length) delete data.title;
+    if (!data.clues && clues) data.clues = clues;
+    if (!data.description || !data.description.length) delete data.description;
+    if (isEditMode) {
+      dataRef.doc(dataItem?.id).update(data);
+    } else {
+      dataRef
+        .add(data)
+        .then(() => {
+          // release keyboard
+          Keyboard.dismiss();
+        })
+        .catch((error) => {
+          // show an alert in case of error
+          alert(error);
+        });
+    }
     navigation.navigate('Home')
   }
 
@@ -72,12 +74,10 @@ const ItemModal = ({ onClose, showForm }: Props) => {
     if (title.length) {
       const response = await fetch(`${apiConfig.baseUrl}?q=${title}&tbm=${apiConfig.tbm}&ijn=${apiConfig.ijn}&api_key=${apiConfig.api_key}`);
       const data = await response.json();
-      const nextImages = data.images_results.map((image) => image.original).slice(0,5);
+      const nextImages = data.images_results.map((image) => image.original).slice(0,10);
       setImages(nextImages)
     }
   }
-
-  let date: Date = new Date();
 
   const onDateChange = (newDate: Date) => {
     date = newDate;
@@ -212,17 +212,21 @@ const ItemModal = ({ onClose, showForm }: Props) => {
         />
         <DateSelector onChange={onDateChange} />
         <Layout style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop: 15 }}>
+          <Text category='h6'>Images selected</Text>
+          <View style={styles.imagesContainer}>
           {(imagesSelected && imagesSelected.length) ? imagesSelected.map((image: string) => (
-            <TouchableHighlight onPress={() => {
-              selectImage(image);
-            }}>
-              <Image
-                source={{ uri: image }}
-                style={{ height: 100, width: 100  }}
-              />
-            </TouchableHighlight>
+                <TouchableHighlight onPress={() => {
+                  selectImage(image);
+                }}>
+                  <Image
+                    source={{ uri: image }}
+                    style={{ height: 100, width: 100  }}
+                  />
+                </TouchableHighlight>
           )): (<Text>0 images selected</Text>)}
-          <Text>
+          </View>
+          <Text category='h6'>Images Availables</Text>
+          <View style={styles.imagesContainer}>
             {imagesToShow ? imagesToShow.map((image: string) => (
               <TouchableHighlight onPress={() => {
                 selectImage(image);
@@ -233,7 +237,7 @@ const ItemModal = ({ onClose, showForm }: Props) => {
                 />
               </TouchableHighlight>
             )): (<Text>0 images uploaded</Text>)}
-          </Text>
+          </View>
           <Layout style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-around', marginTop: 10 }}>
             <Button onPress={takeAndUploadPhotoAsync}>
               Upload
@@ -254,7 +258,7 @@ const ItemModal = ({ onClose, showForm }: Props) => {
         <Button
           disabled={!tag}
           onPress={() => { addItem(); }} style={!tag ? {...styles.button, ...styles.buttonDisabled} : styles.button}>
-          Add
+          { isEditMode ? 'Update' : 'Add'}
         </Button>
       </Layout>
     </ScrollView>
@@ -334,6 +338,11 @@ const styles = StyleSheet.create({
     height: 64,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  imagesContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    marginBottom: 10,
   },
   trashIcon:{
     marginTop:5,

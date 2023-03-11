@@ -12,6 +12,7 @@ export interface Item {
   private: boolean;
   tag: string[];
   title?: string;
+  updatedAt?: Date;
 }
 
 export interface ItemWithId extends Item {

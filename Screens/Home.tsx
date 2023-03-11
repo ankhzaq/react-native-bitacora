@@ -135,12 +135,11 @@ const Home = () => {
             return (
               <View>
                 <Pressable
-                  disabled={!!item.title || !!item.description || !item.tag}
                   style={styles.container}
                   // @ts-ignore
                   onPress={() => {
-                    addItem({ createdAt: new Date(), tag: item.tag, ...CONSTANT_ITEM });
-                    // navigation.navigate('Detail', {item});
+                    // addItem({ createdAt: new Date(), tag: item.tag, ...CONSTANT_ITEM });
+                    navigation.navigate('NewItem', {data: item});
                   }}
                 >
                   <FontAwesome name="trash-o"
