@@ -251,13 +251,16 @@ const ItemModal = ({ route }) => {
           onPress={() => {
             navigation.navigate('Home');
           }}
+          status="basic"
           style={styles.button}
         >
           Back
         </Button>
         <Button
           disabled={!tag}
-          onPress={() => { addItem(); }} style={!tag ? {...styles.button, ...styles.buttonDisabled} : styles.button}>
+          onPress={() => { addItem(); }} style={!tag ? {...styles.button, ...styles.buttonDisabled} : styles.button}
+          status="success"
+        >
           { isEditMode ? 'Update' : 'Add'}
         </Button>
       </Layout>
@@ -310,7 +313,6 @@ const styles = StyleSheet.create({
   button: {
     height: 47,
     borderRadius: 5,
-    backgroundColor: '#788eec',
     marginVertical: 15,
     width: '80%',
     alignSelf: 'center',
