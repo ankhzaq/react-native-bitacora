@@ -41,6 +41,7 @@ const ItemModal = ({ route }) => {
   const addItem = (dataPressed?: Item) => {
     const data: Item = dataPressed || {
       createdAt: dataItem?.createdAt || date,
+      count,
       description,
       ...CONSTANT_ITEM,
       tag: tag.split(','),
@@ -145,22 +146,25 @@ const ItemModal = ({ route }) => {
         <Text category='h5'>FORM</Text>
       </Layout>
       <Layout style={{ flex: 1, padding: 10 }}>
-        <Text>{count}</Text>
-        <Button
-          onPress={() => setCount(count + 1)}
-          status="success"
-        >
-          +
-        </Button>
-        <Button
-          disabled={!count}
-          onPress={() => {
-            setCount(count - 1)
-          }}
-          status="danger"
-        >
-          -
-        </Button>
+        <View style={styles.countRow}>
+          <Text style={styles.marginRight10}>Count: {count}</Text>
+          <Button
+            onPress={() => setCount(count + 1)}
+            status="success"
+            style={styles.marginRight10}
+          >
+            +
+          </Button>
+          <Button
+            disabled={count < 2}
+            onPress={() => {
+              setCount(count - 1)
+            }}
+            status="danger"
+          >
+            -
+          </Button>
+        </View>
         <Input
           label='Tag'
           placeholderTextColor="#aaaaaa"
@@ -289,6 +293,9 @@ const styles = StyleSheet.create({
   backdrop: {
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
+  marginRight10: {
+    marginRight: 10,
+  },
   container: {
     backgroundColor: '#e5e5e5',
     padding: 15,
@@ -357,6 +364,12 @@ const styles = StyleSheet.create({
     height: 64,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  countRow: {
+    display: 'flex',
+    alignItems: 'center',
+    flexDirection: 'row',
+    marginBottom: 10,
   },
   imagesContainer: {
     display: 'flex',
