@@ -1,28 +1,12 @@
-import { View, FlatList, StyleSheet, Pressable, Keyboard, Image } from 'react-native'
-import { Button, Input, Layout, Modal, Text } from '@ui-kitten/components';
+import { View, FlatList, StyleSheet, Pressable, Keyboard } from 'react-native'
+import { Button, Layout, Text } from '@ui-kitten/components';
 import React, { useState, useEffect, useMemo } from 'react'
-import { apiConfig, firebase } from '../config';
+import { firebase } from '../config';
 import { FontAwesome } from "@expo/vector-icons";
 import { Item, ItemToShow, ItemWithId } from '../types/item';
-import DateSelector from '../Components/DateSelector';
-import * as ImagePicker from 'expo-image-picker';
-import { ScrollView } from 'react-native-gesture-handler';
 import ImageItem from '../Components/ImageItem';
 import * as LocalAuthentication from 'expo-local-authentication';
-import ItemModal from '../Components/ItemModal';
 import { useNavigation } from '@react-navigation/native';
-
-const CONSTANT_ITEM = {
-  email: "darthzaq@gmail.com",
-  private: false,
-}
-
-let timeOut = null;
-
-const initialClueState = {
-  question: '',
-  answer: '',
-};
 
 const Home = () => {
   const [data, setData] = useState([]);
