@@ -31,6 +31,7 @@ const ItemModal = ({ route }) => {
   const [description, setDescription] = useState(dataItem?.description || '');
   const [count, setCount] = useState(dataItem?.count || 1);
   const [tag, setTag] = useState(dataItem ? `${dataItem?.tag}` :'');
+  const [value, setValue] = useState(dataItem?.value || 0);
   const [clues, setClues] = useState(dataItem?.clues || [initialClueState]);
   const [title, setTitle] = useState(dataItem?.title || '');
   const [images, setImages] = useState<string[]>([]);
@@ -228,6 +229,17 @@ const ItemModal = ({ route }) => {
           placeholderTextColor="#aaaaaa"
           onChangeText={(text) => setDescription(text)}
           value={description}
+          underlineColorAndroid="transparent"
+          autoCapitalize="none"
+        />
+        <Input
+          label='Value (number)'
+          placeholderTextColor="#aaaaaa"
+          onChangeText={(text) => {
+            const number = Number(text);
+            if(!isNaN(number)) setValue(number)
+          }}
+          value={value ? String(value) : ''}
           underlineColorAndroid="transparent"
           autoCapitalize="none"
         />

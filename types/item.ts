@@ -14,6 +14,7 @@ export interface Item {
   tag: string[];
   title?: string;
   updatedAt?: Date;
+  value?: number,
 }
 
 export interface ItemWithId extends Item {
