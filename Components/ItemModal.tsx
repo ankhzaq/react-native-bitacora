@@ -4,7 +4,7 @@ import { Button, Input, Layout, Text } from '@ui-kitten/components';
 import { FontAwesome } from '@expo/vector-icons';
 import { ScrollView, TouchableHighlight } from 'react-native-gesture-handler';
 import DateSelector from './DateSelector';
-import { apiConfig, firebase } from '../config';
+import { apiConfig, firebase, ROUTES } from '../config';
 import * as ImagePicker from 'expo-image-picker';
 import { Item, ItemWithId } from '../types/item';
 import { useNavigation } from '@react-navigation/native';
@@ -70,7 +70,7 @@ const ItemModal = ({ route }) => {
           alert(error);
         });
     }
-    navigation.navigate('Home')
+    navigation.navigate(ROUTES.list)
   }
 
   const handleGetImages = async () => {
@@ -282,7 +282,7 @@ const ItemModal = ({ route }) => {
         </Layout>
         <Button
           onPress={() => {
-            navigation.navigate('Home');
+            navigation.navigate(ROUTES.list);
           }}
           status="basic"
           style={styles.button}

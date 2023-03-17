@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { View, TextInput, StyleSheet, Text, Pressable } from "react-native"
-import { firebase } from '../config';
+import { firebase, ROUTES } from '../config';
 import { useNavigation } from '@react-navigation/native';
 
 const Detail = ({route}) => {
@@ -15,23 +15,23 @@ const Detail = ({route}) => {
             .update({
                 heading: textHeading,
             }).then(() => {
-                navigation.navigate("Home")
+                navigation.navigate(ROUTES.list)
             }).catch((error) => {
                 alert(error.message)
             })
         }
-        
+
     }
 
     return (
         <View style={styles.container}>
-            <TextInput 
+            <TextInput
                 style={styles.textfield}
                 onChangeText={onChangeHeadingText}
                 value={textHeading}
                 placeholder="Update Todo"
             />
-            <Pressable 
+            <Pressable
                 style={styles.buttonUpdate}
                 onPress={() => {updateTodo()}}>
                 <Text>UPDATE USER</Text>

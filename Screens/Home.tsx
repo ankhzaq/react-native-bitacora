@@ -1,7 +1,7 @@
 import { View, FlatList, StyleSheet, Pressable, Keyboard } from 'react-native'
 import { Button, Layout, Text } from '@ui-kitten/components';
 import React, { useState, useEffect, useMemo } from 'react'
-import { firebase } from '../config';
+import { firebase, ROUTES } from '../config';
 import { FontAwesome } from "@expo/vector-icons";
 import { Item, ItemToShow, ItemWithId } from '../types/item';
 import ImageItem from '../Components/ImageItem';
@@ -101,7 +101,7 @@ const Home = () => {
       <FontAwesome name="user-o" onPress={pressHandler} style={{ margin: 15 }} />
       <Button
         onPress={() => {
-          navigation.navigate('NewItem');
+          navigation.navigate(ROUTES.detail);
         }}
         style={{ marginLeft: 15 }}
       >
@@ -123,7 +123,7 @@ const Home = () => {
                   // @ts-ignore
                   onPress={() => {
                     // addItem({ createdAt: new Date(), tag: item.tag, ...CONSTANT_ITEM });
-                    navigation.navigate('NewItem', {data: item});
+                    navigation.navigate(ROUTES.detail, {data: item});
                   }}
                 >
                   <FontAwesome name="trash-o"
