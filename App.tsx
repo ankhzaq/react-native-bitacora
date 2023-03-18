@@ -6,7 +6,6 @@ import { createStackNavigator } from '@react-navigation/stack';
 
 import Home from './Screens/Home';
 import Detail from './Screens/Detail';
-import ItemModal from './Components/ItemModal';
 import { ROUTES } from './config';
 
 const Stack = createStackNavigator()
@@ -22,12 +21,8 @@ export default function App() {
               component={Home}
             />
             <Stack.Screen
-              name='OldDetail'
-              component={Detail}
-            />
-            <Stack.Screen
               name={ROUTES.detail}
-              component={ItemModal}
+              component={Detail}
             />
           </Stack.Navigator>
         </NavigationContainer>
