@@ -29,6 +29,7 @@ const ItemModal = ({ route }) => {
 
   const dataRef = firebase.firestore().collection('bitacora');
   const [description, setDescription] = useState(dataItem?.description || '');
+  const [count, setCount] = useState(dataItem?.count || 1);
   const [tag, setTag] = useState(dataItem ? `${dataItem?.tag}` :'');
   const [clues, setClues] = useState(dataItem?.clues || [initialClueState]);
   const [title, setTitle] = useState(dataItem?.title || '');
@@ -144,6 +145,22 @@ const ItemModal = ({ route }) => {
         <Text category='h5'>FORM</Text>
       </Layout>
       <Layout style={{ flex: 1, padding: 10 }}>
+        <Text>{count}</Text>
+        <Button
+          onPress={() => setCount(count + 1)}
+          status="success"
+        >
+          +
+        </Button>
+        <Button
+          disabled={!count}
+          onPress={() => {
+            setCount(count - 1)
+          }}
+          status="danger"
+        >
+          -
+        </Button>
         <Input
           label='Tag'
           placeholderTextColor="#aaaaaa"

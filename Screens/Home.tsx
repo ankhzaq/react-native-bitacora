@@ -150,15 +150,15 @@ const Home = () => {
                     <Text style={styles.itemHeading}>
                       ({item.count})
                     </Text>
-                    {(item.images && item.images.length) ? item.images.map((image) => (
+                    {(item.images && item.images.length) ? (
                       <ImageItem
-                        image={image}
+                        image={item.images[0]}
                         onRemoveImage={() => {
-                          const nextImages = item.images.filter((imageItem) => imageItem !== image);
+                          const nextImages = item.images.filter((imageItem) => imageItem !== item.images[0]);
                           updateItem(item.id, { ...item, images: nextImages });
                         }}
                       />
-                    )) : <Text></Text>}
+                    ) : <Text></Text>}
                     <Text style={styles.itemHeading}>
                       {item.title && ` - ${item.title}`}
                     </Text>

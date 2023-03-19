@@ -4,6 +4,7 @@ interface Clue {
 }
 
 export interface Item {
+  count: number;
   createdAt: Date;
   clues?: Clue[];
   description?: string;
