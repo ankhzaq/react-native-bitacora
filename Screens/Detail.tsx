@@ -21,6 +21,10 @@ const CONSTANT_ITEM = {
   private: false,
 }
 
+interface AddItemProps {
+  duplicate?: boolean
+}
+
 const Detail = ({ route }) => {
   const dataItem: ItemWithId = route.params.data;
   const isEditMode = !!dataItem;
@@ -39,8 +43,8 @@ const Detail = ({ route }) => {
 
   const navigation = useNavigation();
 
-  const addItem = (dataPressed?: Item) => {
-    const data: Item = dataPressed || {
+  const addItem = ({ duplicate }: AddItemProps) => {
+    const data: Item = {
       createdAt: dataItem?.createdAt || date,
       count,
       description,
@@ -48,7 +52,10 @@ const Detail = ({ route }) => {
       tag: tag.split(','),
       title,
     };
-    if (isEditMode) {
+    if (duplicate) {
+      data.createdAt = date
+    }
+    if (isEditMode && !duplicate) {
       data.updatedAt = date;
     }
 
@@ -56,7 +63,7 @@ const Detail = ({ route }) => {
     if (!data.title || !data.title.length) delete data.title;
     if (!data.clues && clues) data.clues = clues;
     if (!data.description || !data.description.length) delete data.description;
-    if (isEditMode) {
+    if (isEditMode && !duplicate) {
       dataRef.doc(dataItem?.id).update(data);
     } else {
       dataRef
@@ -282,16 +289,16 @@ const Detail = ({ route }) => {
         </Layout>
         <Button
           onPress={() => {
-            navigation.navigate(ROUTES.list);
+            addItem({ duplicate: true });
           }}
           status="basic"
           style={styles.button}
         >
-          Back
+          Duplicate
         </Button>
         <Button
           disabled={!tag}
-          onPress={() => { addItem(); }} style={!tag ? {...styles.button, ...styles.buttonDisabled} : styles.button}
+          onPress={() => { addItem({}); }} style={!tag ? {...styles.button, ...styles.buttonDisabled} : styles.button}
           status="success"
         >
           { isEditMode ? 'Update' : 'Add'}

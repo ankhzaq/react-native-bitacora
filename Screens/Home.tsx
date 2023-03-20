@@ -86,14 +86,15 @@ const Home = () => {
 
   const dataToShow = useMemo(() => {
     const result: ItemToShow[] = [];
+    console.log("data: ", data.length);
     data.forEach((item: ItemWithId) => {
-      const indexItemResult = result.findIndex((itemResult: ItemToShow) => itemResult.tag === item.tag);
+      const indexItemResult = result.findIndex((itemResult: ItemToShow) => JSON.stringify(itemResult.tag) === JSON.stringify(item.tag));
       if (indexItemResult >= 0) result[indexItemResult].count += 1;
       else {
-        result.push({ ...item, count: 1 });
+        result.push({ ...item });
       }
     });
-    return result;
+    return data;
   }, [data]);
 
   return (
