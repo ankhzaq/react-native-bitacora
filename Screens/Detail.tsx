@@ -26,7 +26,7 @@ interface AddItemProps {
 }
 
 const Detail = ({ route }) => {
-  const dataItem: ItemWithId = route.params.data;
+  const dataItem: ItemWithId = route.params?.data;
   const isEditMode = !!dataItem;
 
   let date: Date = new Date();

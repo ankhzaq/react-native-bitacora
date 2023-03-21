@@ -5,7 +5,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 
 import Home from './Screens/Home';
-import Detail from './Screens/Detail';
+import Detail2 from './Screens/Detail2';
 import { ROUTES } from './config';
 
 const Stack = createStackNavigator()
@@ -22,7 +22,7 @@ export default function App() {
             />
             <Stack.Screen
               name={ROUTES.detail}
-              component={Detail}
+              component={Detail2}
             />
           </Stack.Navigator>
         </NavigationContainer>

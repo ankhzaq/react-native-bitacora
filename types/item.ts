@@ -11,7 +11,7 @@ export interface Item {
   email: string;
   images?: string[];
   private: boolean;
-  tag: string[];
+  tags: string[];
   title?: string;
   updatedAt?: Date;
   value?: number,

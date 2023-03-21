@@ -19,7 +19,6 @@ const Home = () => {
       LocalAuthentication.authenticateAsync({
         promptMessage: 'Face ID'
       }).then(({ success }) => {
-        console.log('then');
         console.log('success: ', success);
       }).catch(() => {
         console.log('catch');
@@ -86,7 +85,6 @@ const Home = () => {
 
   const dataToShow = useMemo(() => {
     const result: ItemToShow[] = [];
-    console.log("data: ", data.length);
     data.forEach((item: ItemWithId) => {
       const indexItemResult = result.findIndex((itemResult: ItemToShow) => JSON.stringify(itemResult.tag) === JSON.stringify(item.tag));
       if (indexItemResult >= 0) result[indexItemResult].count += 1;
