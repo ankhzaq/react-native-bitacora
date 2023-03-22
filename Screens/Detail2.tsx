@@ -18,7 +18,6 @@ const initialClueState = {
 
 const CONSTANT_ITEM = {
   email: "darthzaq@gmail.com",
-  private: false,
 }
 
 interface AddItemProps {
@@ -35,17 +34,17 @@ const Detail2 = ({ route }) => {
   let date: Date = new Date();
 
   const [description, setDescription] = useState(dataItem?.description || '');
-  const [count, setCount] = useState(dataItem?.count || 1);
 
   const [tags, setTags] = useState([]);
-  const [tagsSelected, setTagsSelected] = useState([]);
-  const [tagAutocompleted, setTagAutocompleted] = useState('');
-  const [tabIndexSelected, setTabIndexSelected] = useState(0);
+  const [tagsSelected, setTagsSelected] = useState(dataItem?.tags || []);
 
-  const [tag, setTag] = useState(dataItem ? `${dataItem?.tags}` :'');
+  const [tagAutocompleted, setTagAutocompleted] = useState('');
+
+  const [tabIndexSelected, setTabIndexSelected] = useState(!!dataItem?.clues ? 1 : 0);
+
   const [value, setValue] = useState(dataItem?.value || 0);
   const [clues, setClues] = useState(dataItem?.clues || [initialClueState]);
-  const [title, setTitle] = useState(dataItem?.title || '');
+  const [searchImages, setSearchImages] = useState('');
   const [images, setImages] = useState<string[]>([]);
   const [imagesSelected, setImagesSelected] = useState<string[]>(dataItem?.images || []);
 
@@ -67,26 +66,27 @@ const Detail2 = ({ route }) => {
         });
   }, []);
 
+  const isQuickCard = tabIndexSelected === 0;
+
   const addItem = ({ duplicate }: AddItemProps) => {
     const data: Item = {
       createdAt: dataItem?.createdAt || date,
-      count,
-      description,
       ...CONSTANT_ITEM,
-      tags: tag.split(','),
-      title,
+      tags: tagsSelected,
     };
+    if (isQuickCard) {
+      data.value = value;
+      if (description.length) data.description = description;
+    } else {
+      if (imagesSelected && imagesSelected.length) data.images = imagesSelected;
+      if (!data.clues && clues) data.clues = clues;
+    }
     if (duplicate) {
       data.createdAt = date
     }
     if (isEditMode && !duplicate) {
       data.updatedAt = date;
     }
-
-    if (imagesSelected && imagesSelected.length) data.images = imagesSelected;
-    if (!data.title || !data.title.length) delete data.title;
-    if (!data.clues && clues) data.clues = clues;
-    if (!data.description || !data.description.length) delete data.description;
     if (isEditMode && !duplicate) {
       dataRef.doc(dataItem?.id).update(data);
     } else {
@@ -101,12 +101,12 @@ const Detail2 = ({ route }) => {
           alert(error);
         });
     }
-    navigation.navigate(ROUTES.list)
+    navigation.navigate(ROUTES.list);
   }
 
   const handleGetImages = async () => {
-    if (title.length) {
-      const response = await fetch(`${apiConfig.baseUrl}?q=${title}&tbm=${apiConfig.tbm}&ijn=${apiConfig.ijn}&api_key=${apiConfig.api_key}`);
+    if (searchImages.length) {
+      const response = await fetch(`${apiConfig.baseUrl}?q=${searchImages}&tbm=${apiConfig.tbm}&ijn=${apiConfig.ijn}&api_key=${apiConfig.api_key}`);
       const data = await response.json();
       const nextImages = data.images_results.map((image) => image.original).slice(0,10);
       setImages(nextImages)
@@ -200,8 +200,9 @@ const Detail2 = ({ route }) => {
       <Button
         disabled={!tagAutocompleted.length}
         onPress={() => {
-          const nextTagsSelected = tagsSelected.concat([tagAutocompleted]);
-          const nextTags = tags.concat([tagAutocompleted]);
+          const newTag = tagAutocompleted.toLowerCase();
+          const nextTagsSelected = tagsSelected.concat([newTag]);
+          const nextTags = tags.concat([newTag]);
           setTagsSelected(nextTagsSelected);
           setTags(nextTags);
           setTagAutocompleted('');
@@ -241,6 +242,14 @@ const Detail2 = ({ route }) => {
                   if(!isNaN(number)) setValue(number)
                 }}
                 value={value ? String(value) : ''}
+                underlineColorAndroid="transparent"
+                autoCapitalize="none"
+              />
+              <Input
+                label='Description'
+                placeholderTextColor="#aaaaaa"
+                onChangeText={(text) => setDescription(text)}
+                value={description}
                 underlineColorAndroid="transparent"
                 autoCapitalize="none"
               />
@@ -287,6 +296,20 @@ const Detail2 = ({ route }) => {
                 ))
               }
               <Layout style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop: 15 }}>
+                <Input
+                  label='Search images'
+                  placeholderTextColor="#aaaaaa"
+                  onChangeText={(text) => {
+                    setSearchImages(text);
+                    if (!isQuickCard) {
+                      clearTimeout(timeOut);
+                      timeOut = setTimeout(handleGetImages, 1500)
+                    }
+                  }}
+                  value={searchImages}
+                  underlineColorAndroid="transparent"
+                  autoCapitalize="none"
+                />
                 <Text category='h6'>Images selected</Text>
                 <View style={styles.imagesContainer}>
                   {(imagesSelected && imagesSelected.length) ? imagesSelected.map((image: string) => (

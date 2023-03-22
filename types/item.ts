@@ -4,15 +4,12 @@ interface Clue {
 }
 
 export interface Item {
-  count: number;
   createdAt: Date;
   clues?: Clue[];
   description?: string;
   email: string;
   images?: string[];
-  private: boolean;
   tags: string[];
-  title?: string;
   updatedAt?: Date;
   value?: number,
 }
