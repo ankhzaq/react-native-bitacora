@@ -40,7 +40,7 @@ const Detail2 = ({ route }) => {
 
   const [tagAutocompleted, setTagAutocompleted] = useState('');
 
-  const [tabIndexSelected, setTabIndexSelected] = useState(!!dataItem?.clues ? 1 : 0);
+  const [tabIndexSelected, setTabIndexSelected] = useState(!dataItem?.isQuickCard ? 1 : 0);
 
   const [value, setValue] = useState(dataItem?.value || 0);
   const [clues, setClues] = useState(dataItem?.clues || [initialClueState]);
@@ -72,6 +72,7 @@ const Detail2 = ({ route }) => {
     const data: Item = {
       createdAt: dataItem?.createdAt || date,
       ...CONSTANT_ITEM,
+      isQuickCard: tabIndexSelected === 0,
       tags: tagsSelected,
     };
     if (isQuickCard) {
@@ -187,6 +188,7 @@ const Detail2 = ({ route }) => {
         placeholder='Add tags...'
         value={tagAutocompleted}
         onSelect={(index) => {
+          setTagAutocompleted('');
           setTagsSelected(tagsSelected.concat([tagsForAutoCompleted()[index]]));
         }}
         onChangeText={(text) => setTagAutocompleted(text)}>

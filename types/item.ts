@@ -8,6 +8,7 @@ export interface Item {
   clues?: Clue[];
   description?: string;
   email: string;
+  isQuickCard: boolean;
   images?: string[];
   tags: string[];
   updatedAt?: Date;
