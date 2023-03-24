@@ -4,14 +4,14 @@ interface Clue {
 }
 
 export interface Item {
-  createdAt: Date;
+  createdAt: string;
   clues?: Clue[];
   description?: string;
   email: string;
   isQuickCard: boolean;
   images?: string[];
   tags: string[];
-  updatedAt?: Date;
+  updatedAt?: string;
   value?: number,
 }
 

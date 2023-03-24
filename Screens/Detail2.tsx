@@ -31,7 +31,7 @@ const Detail2 = ({ route }) => {
   const dataItem: ItemWithId = route.params?.data;
   const isEditMode = !!dataItem;
 
-  let date: Date = new Date();
+  let date: Date =  new Date(dataItem.createdAt || null);
 
   const [description, setDescription] = useState(dataItem?.description || '');
 
@@ -70,7 +70,7 @@ const Detail2 = ({ route }) => {
 
   const addItem = ({ duplicate }: AddItemProps) => {
     const data: Item = {
-      createdAt: dataItem?.createdAt || date,
+      createdAt: date.toISOString() || dataItem?.createdAt || new Date().toISOString(),
       ...CONSTANT_ITEM,
       isQuickCard: tabIndexSelected === 0,
       tags: tagsSelected,
@@ -83,11 +83,12 @@ const Detail2 = ({ route }) => {
       if (!data.clues && clues) data.clues = clues;
     }
     if (duplicate) {
-      data.createdAt = date
+      data.createdAt = (date || new Date()).toISOString();
     }
     if (isEditMode && !duplicate) {
-      data.updatedAt = date;
+      data.updatedAt = new Date().toISOString();
     }
+
     if (isEditMode && !duplicate) {
       dataRef.doc(dataItem?.id).update(data);
     } else {
@@ -350,7 +351,7 @@ const Detail2 = ({ route }) => {
             </>
           )
         }
-        <DateSelector onChange={onDateChange} />
+        <DateSelector defaultDate={date} onChange={onDateChange} />
         <Button
           onPress={() => {
             addItem({ duplicate: true });
