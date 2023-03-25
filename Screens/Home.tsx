@@ -113,44 +113,72 @@ const Home = () => {
         <FlatList
           style={{}}
           data={dataToShow}
+          horizontal
           numColumns={1}
           renderItem={({ item }: { item: ItemToShow }) => {
             return (
-              <View>
+              <View style={styles.container}>
                 <Pressable
-                  style={styles.container}
                   // @ts-ignore
                   onPress={() => {
                     // addItem({ createdAt: new Date(), tag: item.tag, ...CONSTANT_ITEM });
-                    navigation.navigate(ROUTES.detail, {data: item});
+                    // navigation.navigate(ROUTES.detail, {data: item});
                   }}
                 >
-                  <FontAwesome name="trash-o"
-                               color="red"
-                               onPress={() => deleteItem(item)}
-                               style={styles.trashIcon} />
-                  <View style={styles.innerContainer}>
-                    <Text style={styles.itemHeading}>
-                      ({item.count})
-                    </Text>
-                    {(item.images && item.images.length) ? (
-                      <ImageItem
-                        image={item.images[0]}
-                        onRemoveImage={() => {
-                          const nextImages = item.images.filter((imageItem) => imageItem !== item.images[0]);
-                          updateItem(item.id, { ...item, images: nextImages });
-                        }}
-                      />
-                    ) : <Text></Text>}
-                    <Text style={styles.itemHeading}>
-                      {item.title && ` - ${item.title}`}
-                    </Text>
-                  </View>
+                  <ImageItem
+                    image={item.images[0]}
+                    onRemoveImage={() => {
+                      const nextImages = item.images.filter((imageItem) => imageItem !== item.images[0]);
+                      updateItem(item.id, { ...item, images: nextImages });
+                    }}
+                  />
                 </Pressable>
               </View>
             )
           }}
         />
+        {/* OLD people
+          <FlatList
+            style={{}}
+            data={dataToShow}
+            numColumns={1}
+            renderItem={({ item }: { item: ItemToShow }) => {
+              return (
+                <View>
+                  <Pressable
+                    style={styles.container}
+                    // @ts-ignore
+                    onPress={() => {
+                      // addItem({ createdAt: new Date(), tag: item.tag, ...CONSTANT_ITEM });
+                      navigation.navigate(ROUTES.detail, {data: item});
+                    }}
+                  >
+                    <FontAwesome name="trash-o"
+                                 color="red"
+                                 onPress={() => deleteItem(item)}
+                                 style={styles.trashIcon} />
+                    <View style={styles.innerContainer}>
+                      <Text style={styles.itemHeading}>
+                        ({item.count})
+                      </Text>
+                      {(item.images && item.images.length) ? (
+                        <ImageItem
+                          image={item.images[0]}
+                          onRemoveImage={() => {
+                            const nextImages = item.images.filter((imageItem) => imageItem !== item.images[0]);
+                            updateItem(item.id, { ...item, images: nextImages });
+                          }}
+                        />
+                      ) : <Text></Text>}
+                      <Text style={styles.itemHeading}>
+                        {item.title && ` - ${item.title}`}
+                      </Text>
+                    </View>
+                  </Pressable>
+                </View>
+              )
+            }}
+          />*/}
       </Layout>
     </Layout>
   )
@@ -162,12 +190,18 @@ const styles = StyleSheet.create({
   },
   container: {
     backgroundColor: '#e5e5e5',
+    display: 'flex',
+    flexDirection: 'row',
     padding: 15,
     borderRadius: 15,
     margin:5,
     marginHorizontal: 10,
-    flexDirection:'row',
     alignItems:'center'
+  },
+  image: {
+    display: 'flex',
+    flex: 1,
+    maxWidth: 30,
   },
   inputClue: {
     marginBottom: 10,
