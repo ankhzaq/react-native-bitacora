@@ -111,7 +111,6 @@ const Home = () => {
           <Text category='h5'>LIST</Text>
         </Layout>
         <FlatList
-          style={{}}
           data={dataToShow}
           horizontal
           numColumns={1}
@@ -122,7 +121,7 @@ const Home = () => {
                   // @ts-ignore
                   onPress={() => {
                     // addItem({ createdAt: new Date(), tag: item.tag, ...CONSTANT_ITEM });
-                    // navigation.navigate(ROUTES.detail, {data: item});
+                    navigation.navigate(ROUTES.detail, {data: item});
                   }}
                 >
                   <ImageItem
@@ -133,6 +132,11 @@ const Home = () => {
                     }}
                   />
                 </Pressable>
+                <View style={styles.tagsContainer}>
+                  {item.tags.map((tagItem: string) => (
+                    <Text style={styles.tag}>{tagItem}</Text>
+                  ))}
+                </View>
               </View>
             )
           }}
@@ -191,12 +195,33 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: '#e5e5e5',
     display: 'flex',
-    flexDirection: 'row',
+    height: '100%',
+    flexDirection: 'column',
+    flexWrap: 'wrap',
     padding: 15,
     borderRadius: 15,
     margin:5,
     marginHorizontal: 10,
+    minHeight: 175,
     alignItems:'center'
+  },
+  tag: {
+    backgroundColor: 'orange',
+    borderRadius: 5,
+    borderWidth: 1,
+    color: 'white',
+    fontSize: 8,
+    fontWeight: 'bold',
+    margin: 2,
+    padding: 2,
+  },
+  tagsContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    flex: 1,
+    flexWrap: 'wrap',
+    maxWidth: 100,
+    minHeight: 50,
   },
   image: {
     display: 'flex',

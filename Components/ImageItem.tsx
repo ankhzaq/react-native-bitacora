@@ -12,7 +12,7 @@ const ImageItem = ({ image, onRemoveImage }: Props) => (
   <Layout>
     <Image
       source={{ uri: image }}
-      style={{ height: 50, width: 50 }}
+      style={{ height: 80, width: 80 }}
     />
     <Layout style={styles.trashWrapper}>
       <FontAwesome
