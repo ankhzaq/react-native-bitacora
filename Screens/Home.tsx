@@ -1,6 +1,7 @@
 import { View, FlatList, StyleSheet, Pressable, Keyboard } from 'react-native'
 import { Button, Layout, Text } from '@ui-kitten/components';
 import React, { useState, useEffect, useMemo } from 'react'
+import { ScrollView } from 'react-native';
 import { firebase, ROUTES } from '../config';
 import { FontAwesome } from "@expo/vector-icons";
 import { Item, ItemToShow, ItemWithId } from '../types/item';
@@ -132,11 +133,13 @@ const Home = () => {
                     }}
                   />
                 </Pressable>
-                <View style={styles.tagsContainer}>
-                  {item.tags.map((tagItem: string) => (
-                    <Text style={styles.tag}>{tagItem}</Text>
-                  ))}
-                </View>
+                <ScrollView style={styles.tagsContainer}>
+                  <View style={styles.tagsContainer}>
+                    {item.tags.map((tagItem: string) => (
+                      <Text style={styles.tag}>{tagItem}</Text>
+                    ))}
+                  </View>
+                </ScrollView>
               </View>
             )
           }}
@@ -177,6 +180,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flex: 1,
     flexWrap: 'wrap',
+    marginTop: 5,
     maxWidth: 100,
     minHeight: 50,
   },
