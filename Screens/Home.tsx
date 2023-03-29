@@ -1,4 +1,4 @@
-import { View, FlatList, StyleSheet, Pressable, Keyboard } from 'react-native'
+import { View, FlatList, StyleSheet, Pressable, Keyboard, Dimensions } from 'react-native'
 import { Button, Layout, Text } from '@ui-kitten/components';
 import React, { useState, useEffect, useMemo } from 'react'
 import { ScrollView } from 'react-native';
@@ -8,6 +8,8 @@ import { Item, ItemToShow, ItemWithId } from '../types/item';
 import ImageItem from '../Components/ImageItem';
 import * as LocalAuthentication from 'expo-local-authentication';
 import { useNavigation } from '@react-navigation/native';
+
+const { width, height } = Dimensions.get('window');
 
 const Home = () => {
   const [data, setData] = useState([]);
@@ -113,7 +115,6 @@ const Home = () => {
         </Layout>
         <FlatList
           data={dataToShow}
-          horizontal
           numColumns={1}
           renderItem={({ item }: { item: ItemToShow }) => {
             return (
@@ -132,14 +133,14 @@ const Home = () => {
                       updateItem(item.id, { ...item, images: nextImages });
                     }}
                   />
+                  <ScrollView style={styles.tagsContainer}>
+                    <View style={styles.tagsContainer}>
+                      {item.tags.map((tagItem: string) => (
+                        <Text style={styles.tag}>{tagItem}</Text>
+                      ))}
+                    </View>
+                  </ScrollView>
                 </Pressable>
-                <ScrollView style={styles.tagsContainer}>
-                  <View style={styles.tagsContainer}>
-                    {item.tags.map((tagItem: string) => (
-                      <Text style={styles.tag}>{tagItem}</Text>
-                    ))}
-                  </View>
-                </ScrollView>
               </View>
             )
           }}
@@ -162,7 +163,8 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     margin:5,
     marginHorizontal: 10,
-    minHeight: 175,
+    maxHeight: 300,
+    maxWidth: 150,
     alignItems:'center'
   },
   tag: {
