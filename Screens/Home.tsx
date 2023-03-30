@@ -8,6 +8,7 @@ import { Item, ItemToShow, ItemWithId } from '../types/item';
 import ImageItem from '../Components/ImageItem';
 import * as LocalAuthentication from 'expo-local-authentication';
 import { useNavigation } from '@react-navigation/native';
+import { ITEM_MAX_WIDTH } from '../constants';
 
 const { width, height } = Dimensions.get('window');
 
@@ -115,7 +116,7 @@ const Home = () => {
         </Layout>
         <FlatList
           data={dataToShow}
-          numColumns={1}
+          numColumns={2}
           renderItem={({ item }: { item: ItemToShow }) => {
             return (
               <View style={styles.container}>
@@ -133,13 +134,15 @@ const Home = () => {
                       updateItem(item.id, { ...item, images: nextImages });
                     }}
                   />
-                  <ScrollView style={styles.tagsContainer}>
-                    <View style={styles.tagsContainer}>
-                      {item.tags.map((tagItem: string) => (
-                        <Text style={styles.tag}>{tagItem}</Text>
-                      ))}
-                    </View>
-                  </ScrollView>
+                  <View style={styles.tagsContainer}>
+                    <ScrollView>
+                      <View style={styles.tagsContainer}>
+                        {item.tags.map((tagItem: string) => (
+                          <Text style={styles.tag}>{tagItem}</Text>
+                        ))}
+                      </View>
+                    </ScrollView>
+                  </View>
                 </Pressable>
               </View>
             )
@@ -163,8 +166,6 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     margin:5,
     marginHorizontal: 10,
-    maxHeight: 300,
-    maxWidth: 150,
     alignItems:'center'
   },
   tag: {
@@ -180,11 +181,9 @@ const styles = StyleSheet.create({
   tagsContainer: {
     display: 'flex',
     flexDirection: 'row',
-    flex: 1,
     flexWrap: 'wrap',
     marginTop: 5,
-    maxWidth: 100,
-    minHeight: 50,
+    maxWidth: ITEM_MAX_WIDTH,
   },
   image: {
     display: 'flex',

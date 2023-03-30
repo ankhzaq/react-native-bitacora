@@ -2,6 +2,7 @@ import { Image, StyleSheet } from 'react-native'
 import React from 'react';
 import { Layout } from '@ui-kitten/components';
 import { FontAwesome } from '@expo/vector-icons';
+import { ITEM_MAX_HEIGHT, ITEM_MAX_WIDTH } from '../constants';
 
 interface Props {
   image?: string;
@@ -12,7 +13,7 @@ const ImageItem = ({ image, onRemoveImage }: Props) => (
   <Layout>
     <Image
       source={{ uri: image }}
-      style={{ height: 175, width: 125 }}
+      style={{ height: ITEM_MAX_HEIGHT, width: ITEM_MAX_WIDTH }}
     />
     <Layout style={styles.trashWrapper}>
       <FontAwesome
