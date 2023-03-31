@@ -10,8 +10,6 @@ import * as LocalAuthentication from 'expo-local-authentication';
 import { useNavigation } from '@react-navigation/native';
 import { ITEM_MAX_WIDTH } from '../constants';
 
-const { width, height } = Dimensions.get('window');
-
 const Home = () => {
   const [data, setData] = useState([]);
   const dataRef = firebase.firestore().collection('bitacora');
@@ -110,45 +108,43 @@ const Home = () => {
       >
         Add Item
       </Button>
-      <Layout>
-        <Layout style={styles.titleSection}>
-          <Text category='h5'>LIST</Text>
-        </Layout>
-        <FlatList
-          data={dataToShow}
-          numColumns={2}
-          renderItem={({ item }: { item: ItemToShow }) => {
-            return (
-              <View style={styles.container}>
-                <Pressable
-                  // @ts-ignore
-                  onPress={() => {
-                    // addItem({ createdAt: new Date(), tag: item.tag, ...CONSTANT_ITEM });
-                    navigation.navigate(ROUTES.detail, {data: item});
-                  }}
-                >
-                  <ImageItem
-                    image={item.images[0]}
-                    onRemoveImage={() => {
-                      const nextImages = item.images.filter((imageItem) => imageItem !== item.images[0]);
-                      updateItem(item.id, { ...item, images: nextImages });
-                    }}
-                  />
-                  <View style={styles.tagsContainer}>
-                    <ScrollView>
-                      <View style={styles.tagsContainer}>
-                        {item.tags.map((tagItem: string) => (
-                          <Text style={styles.tag}>{tagItem}</Text>
-                        ))}
-                      </View>
-                    </ScrollView>
-                  </View>
-                </Pressable>
-              </View>
-            )
-          }}
-        />
+      <Layout style={styles.titleSection}>
+        <Text category='h5'>LIST</Text>
       </Layout>
+      <FlatList
+        data={dataToShow}
+        numColumns={2}
+        renderItem={({ item }: { item: ItemToShow }) => {
+          return (
+            <View style={styles.container}>
+              <Pressable
+                // @ts-ignore
+                onPress={() => {
+                  // addItem({ createdAt: new Date(), tag: item.tag, ...CONSTANT_ITEM });
+                  navigation.navigate(ROUTES.detail, {data: item});
+                }}
+              >
+                <ImageItem
+                  image={item.images[0]}
+                  onRemoveImage={() => {
+                    const nextImages = item.images.filter((imageItem) => imageItem !== item.images[0]);
+                    updateItem(item.id, { ...item, images: nextImages });
+                  }}
+                />
+                <View style={styles.tagsContainer}>
+                  <ScrollView>
+                    <View style={styles.tagsContainer}>
+                      {item.tags.map((tagItem: string) => (
+                        <Text style={styles.tag}>{tagItem}</Text>
+                      ))}
+                    </View>
+                  </ScrollView>
+                </View>
+              </Pressable>
+            </View>
+          )
+        }}
+      />
     </Layout>
   )
 }
@@ -214,10 +210,6 @@ const styles = StyleSheet.create({
     marginLeft:10,
     marginRight: 10,
     marginTop:100
-  },
-  modal: {
-    minHeight: '100%',
-    width: '90%',
   },
   button: {
     height: 47,
