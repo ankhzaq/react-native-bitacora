@@ -125,7 +125,7 @@ const Home = () => {
                 }}
               >
                 <ImageItem
-                  image={item.images[0]}
+                  images={item.images}
                   onRemoveImage={() => {
                     const nextImages = item.images.filter((imageItem) => imageItem !== item.images[0]);
                     updateItem(item.id, { ...item, images: nextImages });
@@ -165,11 +165,11 @@ const styles = StyleSheet.create({
     alignItems:'center'
   },
   tag: {
-    backgroundColor: 'orange',
+    backgroundColor: '#2c3e50',
     borderRadius: 5,
     borderWidth: 1,
     color: 'white',
-    fontSize: 8,
+    fontSize: 12,
     fontWeight: 'bold',
     margin: 2,
     padding: 2,
