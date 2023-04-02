@@ -31,7 +31,7 @@ const Detail2 = ({ route }) => {
   const dataItem: ItemWithId = route.params?.data;
   const isEditMode = !!dataItem;
 
-  let date: Date =  new Date(dataItem.createdAt || null);
+  let date: Date =  new Date(dataItem?.createdAt || null);
 
   const [description, setDescription] = useState(dataItem?.description || '');
 

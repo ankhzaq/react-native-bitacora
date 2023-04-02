@@ -118,9 +118,7 @@ const Home = () => {
           return (
             <View style={styles.container}>
               <Pressable
-                // @ts-ignore
                 onPress={() => {
-                  // addItem({ createdAt: new Date(), tag: item.tag, ...CONSTANT_ITEM });
                   navigation.navigate(ROUTES.detail, {data: item});
                 }}
               >
