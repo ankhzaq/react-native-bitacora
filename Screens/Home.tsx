@@ -122,13 +122,15 @@ const Home = () => {
                   navigation.navigate(ROUTES.detail, {data: item});
                 }}
               >
-                <ImageItem
-                  images={item.images}
-                  onRemoveImage={() => {
-                    const nextImages = item.images.filter((imageItem) => imageItem !== item.images[0]);
-                    updateItem(item.id, { ...item, images: nextImages });
-                  }}
-                />
+                {!!item.images && (
+                  <ImageItem
+                    images={item.images}
+                    onRemoveImage={() => {
+                      const nextImages = item.images.filter((imageItem) => imageItem !== item.images[0]);
+                      updateItem(item.id, { ...item, images: nextImages });
+                    }}
+                  />
+                )}
                 <View style={styles.tagsContainer}>
                   <ScrollView>
                     <View style={styles.tagsContainer}>
