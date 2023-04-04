@@ -8,13 +8,30 @@ import { Item, ItemToShow, ItemWithId } from '../types/item';
 import ImageItem from '../Components/ImageItem';
 import * as LocalAuthentication from 'expo-local-authentication';
 import { useNavigation } from '@react-navigation/native';
-import { ITEM_MAX_WIDTH } from '../constants';
+import { CHART_CONFIG, ITEM_MAX_WIDTH } from '../constants';
+import { LineChart } from 'react-native-chart-kit';
 
 const Home = () => {
   const [data, setData] = useState([]);
+  const [dataGraphic, setDataGraphic] = useState(null);
   const dataRef = firebase.firestore().collection('bitacora');
 
   const navigation = useNavigation();
+
+  const showGraphic = (allData: any) => {
+    const graphicData = allData.filter((item) => item.value !== undefined);
+
+    const dataGraphic = {
+      labels: graphicData.map((item) => item.createdAt.split('T')[0]),
+      datasets: [
+        {
+          data: graphicData.map((item) => item.value),
+        }
+      ],
+      legend: ["GRAPHIC"] // optional
+    };
+    setDataGraphic(dataGraphic);
+  }
 
   const pressHandler = async () => {
     try {
@@ -30,8 +47,6 @@ const Home = () => {
     }
   }
 
-  let date: Date = new Date();
-
   // fetch or read the data from firestore
   useEffect(() => {
     dataRef
@@ -44,6 +59,7 @@ const Home = () => {
             initialData.push({ id: doc.id, ...item})
           });
           setData(initialData);
+          showGraphic(initialData);
         })
   }, []);
 
@@ -99,6 +115,15 @@ const Home = () => {
 
   return (
     <Layout style={{ flex: 1, paddingHorizontal: 10 }}>
+      {!!dataGraphic && (
+        <LineChart
+          data={dataGraphic}
+          // width={Dimensions.get('window').width}
+          width={650}
+          height={220}
+          chartConfig={CHART_CONFIG}
+        />
+      )}
       <FontAwesome name="user-o" onPress={pressHandler} style={{ margin: 15 }} />
       <Button
         onPress={() => {
