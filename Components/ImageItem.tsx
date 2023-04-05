@@ -6,10 +6,10 @@ import { ITEM_MAX_HEIGHT, ITEM_MAX_WIDTH } from '../constants';
 
 interface Props {
   images?: string[];
-  onRemoveImage?: (image: string) => void;
+  onRemove?: () => void;
 }
 
-const ImageItem = ({ images, onRemoveImage }: Props) => {
+const ImageItem = ({ images, onRemove }: Props) => {
   const [index, setIndex] = useState(0);
 
   return (
@@ -22,9 +22,7 @@ const ImageItem = ({ images, onRemoveImage }: Props) => {
         <FontAwesome
           name="trash"
           color="red"
-          onPress={() => {
-            if (onRemoveImage) onRemoveImage(images[index]);
-          }}
+          onPress={onRemove}
           style={styles.trashIcon}
         />
       </Layout>
@@ -33,7 +31,7 @@ const ImageItem = ({ images, onRemoveImage }: Props) => {
           name="chevron-right"
           color="orange"
           onPress={() => {
-            const nextIndex = (index === images.length - 2) ? 0 : (index + 1);
+            const nextIndex = (index === images.length - 1) ? 0 : (index + 1);
             setIndex(nextIndex);
           }}
           style={styles.trashIcon}

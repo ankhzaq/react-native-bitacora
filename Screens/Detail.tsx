@@ -24,14 +24,15 @@ interface AddItemProps {
   duplicate?: boolean
 }
 
-const Detail2 = ({ route }) => {
+const Detail = ({ route }) => {
 
   const dataRef = firebase.firestore().collection('bitacora');
 
   const dataItem: ItemWithId = route.params?.data;
+
   const isEditMode = !!dataItem;
 
-  let date: Date =  dataItem?.createdAt ? new Date(dataItem?.createdAt) : new Date();
+  const [date, setDate] = useState(dataItem?.createdAt ? new Date(dataItem?.createdAt) : new Date());
 
   const [description, setDescription] = useState(dataItem?.description || '');
 
@@ -116,7 +117,7 @@ const Detail2 = ({ route }) => {
   }
 
   const onDateChange = (newDate: Date) => {
-    date = newDate;
+    setDate(newDate);
   }
 
   const renderIconClueIcon = (props, index) => {
@@ -467,4 +468,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default Detail2;
+export default Detail;

@@ -118,8 +118,7 @@ const Home = () => {
       {!!dataGraphic && (
         <LineChart
           data={dataGraphic}
-          // width={Dimensions.get('window').width}
-          width={650}
+          width={Dimensions.get('window').width}
           height={220}
           chartConfig={CHART_CONFIG}
         />
@@ -150,10 +149,7 @@ const Home = () => {
                 {!!item.images && (
                   <ImageItem
                     images={item.images}
-                    onRemoveImage={() => {
-                      const nextImages = item.images.filter((imageItem) => imageItem !== item.images[0]);
-                      updateItem(item.id, { ...item, images: nextImages });
-                    }}
+                    onRemove={() => deleteItem(item)}
                   />
                 )}
                 <View style={styles.tagsContainer}>
