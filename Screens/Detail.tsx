@@ -8,6 +8,7 @@ import { apiConfig, firebase, ROUTES } from '../config';
 import * as ImagePicker from 'expo-image-picker';
 import { Item, ItemWithId } from '../types/item';
 import { useNavigation } from '@react-navigation/native';
+import TagSelector from '../Components/TagSelector';
 
 let timeOut = null;
 
@@ -38,8 +39,6 @@ const Detail = ({ route }) => {
 
   const [tags, setTags] = useState([]);
   const [tagsSelected, setTagsSelected] = useState(dataItem?.tags || []);
-
-  const [tagAutocompleted, setTagAutocompleted] = useState('');
 
   const [tabIndexSelected, setTabIndexSelected] = useState(!dataItem?.isQuickCard ? 1 : 0);
 
@@ -175,10 +174,6 @@ const Detail = ({ route }) => {
 
   const imagesToShow = (images && images.length) && images.filter(image => !imagesSelected.find(img => image === img));
 
-  const tagsForAutoCompleted = useCallback((): string[] => (
-    tags.filter((tagText) => !tagsSelected.includes(tagText) && tagText.toLowerCase().includes(tagAutocompleted.toLowerCase()))
-  ), [tags, tagAutocompleted]);
-
   const addUpdateBtnDisabled = useMemo(() => !tagsSelected.length, [tagsSelected]);
 
   return (
@@ -186,48 +181,7 @@ const Detail = ({ route }) => {
       <Layout style={styles.titleSection}>
         <Text category='h5'>FORM</Text>
       </Layout>
-      <Autocomplete
-        placeholder='Add tags...'
-        value={tagAutocompleted}
-        onSelect={(index) => {
-          setTagAutocompleted('');
-          setTagsSelected(tagsSelected.concat([tagsForAutoCompleted()[index]]));
-        }}
-        onChangeText={(text) => setTagAutocompleted(text)}>
-        { tagsForAutoCompleted().map((tagItem) => (
-          <AutocompleteItem
-            key={tagItem}
-            title={tagItem}
-          />
-        ))}
-      </Autocomplete>
-      <Button
-        disabled={!tagAutocompleted.length}
-        onPress={() => {
-          const newTag = tagAutocompleted.toLowerCase();
-          const nextTagsSelected = tagsSelected.concat([newTag]);
-          const nextTags = tags.concat([newTag]);
-          setTagsSelected(nextTagsSelected);
-          setTags(nextTags);
-          setTagAutocompleted('');
-        }}
-        status="success"
-        style={styles.marginRight10}
-      >
-        New Tag
-      </Button>
-      {tagsSelected.map((tagSelectedItem) => (
-        <Button
-          onPress={() => {
-            const nextTagsSelected = tagsSelected.filter((selectedTag) => selectedTag !== tagSelectedItem);
-            setTagsSelected(nextTagsSelected);
-          }}
-          status="basic"
-          style={styles.marginRight10}
-        >
-          {tagSelectedItem}
-        </Button>
-      ))}
+      <TagSelector enableAddTags handleTags={(nextTags) => setTagsSelected(nextTags)} tagsDefault={tags} tagsSelectedDefault={tagsSelected} />
       <TabBar
         selectedIndex={tabIndexSelected}
         onSelect={index => setTabIndexSelected(index)}>
