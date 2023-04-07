@@ -69,8 +69,9 @@ const ImageItem = ({ enableAddTags = false, handleTags, tagsSelectedDefault = []
           New Tag
         </Button>
       )}
-      {tagsSelected.map((tagSelectedItem) => (
+      {tagsSelected.map((tagSelectedItem, index) => (
         <Button
+          key={`tagSelected-${index}`}
           onPress={() => {
             const nextTagsSelected = tagsSelected.filter((selectedTag) => selectedTag !== tagSelectedItem);
             handleListTags(nextTagsSelected);

@@ -10,6 +10,7 @@ import * as LocalAuthentication from 'expo-local-authentication';
 import { useNavigation } from '@react-navigation/native';
 import { CHART_CONFIG, ITEM_MAX_WIDTH } from '../constants';
 import { LineChart } from 'react-native-chart-kit';
+import Graphic from './Graphic';
 
 const Home = () => {
   const [data, setData] = useState([]);
@@ -115,14 +116,7 @@ const Home = () => {
 
   return (
     <Layout style={{ flex: 1, paddingHorizontal: 10 }}>
-      {!!dataGraphic && (
-        <LineChart
-          data={dataGraphic}
-          width={Dimensions.get('window').width}
-          height={220}
-          chartConfig={CHART_CONFIG}
-        />
-      )}
+      <Graphic />
       <FontAwesome name="user-o" onPress={pressHandler} style={{ margin: 15 }} />
       <Button
         onPress={() => {
