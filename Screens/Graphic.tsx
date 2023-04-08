@@ -10,6 +10,7 @@ import { Item, ItemWithId } from '../types/item';
 import { useNavigation } from '@react-navigation/native';
 import { CHART_CONFIG } from '../constants';
 import { LineChart } from 'react-native-chart-kit';
+import TagSelector from '../Components/TagSelector';
 
 let timeOut = null;
 
@@ -28,23 +29,30 @@ interface AddItemProps {
 
 const Graphic = () => {
   const dataRef = firebase.firestore().collection('bitacora');
+  const [tagsSelected, setTagsSelected] = useState([]);
+  const [data, setData] = useState([]);
+  const [tags, setTags] = useState([]);
   const [dataGraphic, setDataGraphic] = useState(null);
 
-  const showGraphic = (allData: any) => {
+  useEffect(() => {
+    if (data.length) {
+      const graphicData = data.filter((item) => {
+        const validTags = !tagsSelected.length || tagsSelected.some((tagSelected) => item.tags.includes(tagSelected));
+        return (item.value !== undefined) && validTags;
+      });
 
-    const graphicData = allData.filter((item) => item.value !== undefined);
-
-    const dataGraphic = {
-      labels: graphicData.map((item) => item.createdAt.split('T')[0]),
-      datasets: [
-        {
-          data: graphicData.map((item) => item.value),
-        }
-      ],
-      legend: ["GRAPHIC"] // optional
-    };
-    setDataGraphic(dataGraphic);
-  }
+      const dataGraphic = {
+        labels: graphicData.map((item) => item.createdAt.split('T')[0]),
+        datasets: [
+          {
+            data: graphicData.map((item) => item.value),
+          }
+        ],
+        legend: ["GRAPHIC"] // optional
+      };
+      setDataGraphic(dataGraphic);
+    }
+  }, [data, tagsSelected]);
 
   useEffect(() => {
     dataRef
@@ -52,16 +60,22 @@ const Graphic = () => {
       .onSnapshot(
         querySnapshot => {
           const initialData = [];
+          const tagsCreated = [];
           querySnapshot.forEach((doc) => {
             const item = doc.data()
             initialData.push({ id: doc.id, ...item})
+            item.tags?.forEach((tagItem: string) => {
+              if (!tagsCreated.includes(tagItem)) tagsCreated.push(tagItem);
+            });
           });
-          showGraphic(initialData);
+          setData(initialData);
+          setTags(tagsCreated);
         })
   }, []);
 
   return (
     <>
+      <TagSelector enableAddTags handleTags={(nextTags) => setTagsSelected(nextTags)} tagsDefault={tags} tagsSelectedDefault={tagsSelected} />
       {
         dataGraphic && (
           <LineChart

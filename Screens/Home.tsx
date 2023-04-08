@@ -1,38 +1,21 @@
-import { View, FlatList, StyleSheet, Pressable, Keyboard, Dimensions } from 'react-native'
+import { View, FlatList, StyleSheet, Pressable } from 'react-native'
 import { Button, Layout, Text } from '@ui-kitten/components';
 import React, { useState, useEffect, useMemo } from 'react'
 import { ScrollView } from 'react-native';
 import { firebase, ROUTES } from '../config';
 import { FontAwesome } from "@expo/vector-icons";
-import { Item, ItemToShow, ItemWithId } from '../types/item';
+import { ItemToShow, ItemWithId } from '../types/item';
 import ImageItem from '../Components/ImageItem';
 import * as LocalAuthentication from 'expo-local-authentication';
 import { useNavigation } from '@react-navigation/native';
-import { CHART_CONFIG, ITEM_MAX_WIDTH } from '../constants';
-import { LineChart } from 'react-native-chart-kit';
+import { ITEM_MAX_WIDTH } from '../constants';
 import Graphic from './Graphic';
 
 const Home = () => {
   const [data, setData] = useState([]);
-  const [dataGraphic, setDataGraphic] = useState(null);
   const dataRef = firebase.firestore().collection('bitacora');
 
   const navigation = useNavigation();
-
-  const showGraphic = (allData: any) => {
-    const graphicData = allData.filter((item) => item.value !== undefined);
-
-    const dataGraphic = {
-      labels: graphicData.map((item) => item.createdAt.split('T')[0]),
-      datasets: [
-        {
-          data: graphicData.map((item) => item.value),
-        }
-      ],
-      legend: ["GRAPHIC"] // optional
-    };
-    setDataGraphic(dataGraphic);
-  }
 
   const pressHandler = async () => {
     try {
@@ -60,7 +43,6 @@ const Home = () => {
             initialData.push({ id: doc.id, ...item})
           });
           setData(initialData);
-          showGraphic(initialData);
         })
   }, []);
 
@@ -75,31 +57,6 @@ const Home = () => {
       .catch(error => {
         alert(error);
       })
-  }
-
-  // add a todo
-  const addItem = (dataPressed?: Item) => {
-    dataRef
-      .add(data)
-      .then(() => {
-        // release keyboard
-        Keyboard.dismiss();
-      })
-      .catch((error) => {
-        // show an alert in case of error
-        alert(error);
-      });
-  }
-
-  const updateItem = (id, newProps) => {
-    dataRef
-      .doc(id)
-      .update(newProps).then(() => {
-        alert('Updated successfully')
-    }).catch((error) => {
-      alert(error.message)
-    })
-
   }
 
   const dataToShow = useMemo(() => {
