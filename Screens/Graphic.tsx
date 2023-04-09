@@ -1,31 +1,9 @@
-import { Dimensions, Image, Keyboard, StyleSheet, View } from 'react-native'
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { Autocomplete, AutocompleteItem, Button, Input, Layout, Tab, TabBar, Text } from '@ui-kitten/components';
-import { FontAwesome } from '@expo/vector-icons';
-import { ScrollView, TouchableHighlight } from 'react-native-gesture-handler';
-import DateSelector from '../Components/DateSelector';
-import { apiConfig, firebase, ROUTES } from '../config';
-import * as ImagePicker from 'expo-image-picker';
-import { Item, ItemWithId } from '../types/item';
-import { useNavigation } from '@react-navigation/native';
+import { Dimensions } from 'react-native'
+import React, { useEffect, useState } from 'react';
+import { firebase } from '../config';
 import { CHART_CONFIG } from '../constants';
 import { LineChart } from 'react-native-chart-kit';
 import TagSelector from '../Components/TagSelector';
-
-let timeOut = null;
-
-const initialClueState = {
-  question: '',
-  answer: '',
-};
-
-const CONSTANT_ITEM = {
-  email: "darthzaq@gmail.com",
-}
-
-interface AddItemProps {
-  duplicate?: boolean
-}
 
 const Graphic = () => {
   const dataRef = firebase.firestore().collection('bitacora');
