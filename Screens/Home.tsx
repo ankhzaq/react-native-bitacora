@@ -9,7 +9,6 @@ import ImageItem from '../Components/ImageItem';
 import * as LocalAuthentication from 'expo-local-authentication';
 import { useNavigation } from '@react-navigation/native';
 import { ITEM_MAX_WIDTH } from '../constants';
-import Graphic from './Graphic';
 
 const Home = () => {
   const [data, setData] = useState([]);
@@ -73,7 +72,6 @@ const Home = () => {
 
   return (
     <Layout style={{ flex: 1, paddingHorizontal: 10 }}>
-      <Graphic />
       <FontAwesome name="user-o" onPress={pressHandler} style={{ margin: 15 }} />
       <Button
         onPress={() => {
