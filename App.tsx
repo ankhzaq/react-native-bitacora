@@ -7,6 +7,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import Home from './Screens/Home';
 import Detail from './Screens/Detail';
 import { ROUTES } from './config';
+import Graphic from './Screens/Graphic';
 
 const Stack = createStackNavigator()
 
@@ -23,6 +24,10 @@ export default function App() {
             <Stack.Screen
               name={ROUTES.detail}
               component={Detail}
+            />
+            <Stack.Screen
+              name={ROUTES.graphic}
+              component={Graphic}
             />
           </Stack.Navigator>
         </NavigationContainer>
