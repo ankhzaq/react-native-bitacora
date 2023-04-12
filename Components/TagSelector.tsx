@@ -1,8 +1,6 @@
-import { Image, StyleSheet } from 'react-native'
+import { StyleSheet } from 'react-native'
 import React, { useCallback, useEffect, useState } from 'react';
-import { Autocomplete, AutocompleteItem, Button, Layout } from '@ui-kitten/components';
-import { FontAwesome } from '@expo/vector-icons';
-import { ITEM_MAX_HEIGHT, ITEM_MAX_WIDTH } from '../constants';
+import { Autocomplete, AutocompleteItem, Button } from '@ui-kitten/components';
 
 interface Props {
   enableAddTags: boolean;
@@ -76,8 +74,9 @@ const ImageItem = ({ enableAddTags = false, handleTags, tagsSelectedDefault = []
             const nextTagsSelected = tagsSelected.filter((selectedTag) => selectedTag !== tagSelectedItem);
             handleListTags(nextTagsSelected);
           }}
+          size='tiny'
           status="basic"
-          style={styles.marginRight10}
+          style={{ ...styles.marginRight10, ...styles.tag }}
         >
           {tagSelectedItem}
         </Button>
@@ -90,6 +89,9 @@ const styles = StyleSheet.create({
   marginRight10: {
     marginRight: 10,
   },
+  tag: {
+    width: 'auto',
+  }
 });
 
 export default ImageItem
