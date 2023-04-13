@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native'
 import React, { useCallback, useEffect, useState } from 'react';
-import { Autocomplete, AutocompleteItem, Button } from '@ui-kitten/components';
+import { Autocomplete, AutocompleteItem, Button, Layout } from '@ui-kitten/components';
 
 interface Props {
   enableAddTags: boolean;
@@ -67,25 +67,35 @@ const ImageItem = ({ enableAddTags = false, handleTags, tagsSelectedDefault = []
           New Tag
         </Button>
       )}
-      {tagsSelected.map((tagSelectedItem, index) => (
-        <Button
-          key={`tagSelected-${index}`}
-          onPress={() => {
-            const nextTagsSelected = tagsSelected.filter((selectedTag) => selectedTag !== tagSelectedItem);
-            handleListTags(nextTagsSelected);
-          }}
-          size='tiny'
-          status="basic"
-          style={{ ...styles.marginRight10, ...styles.tag }}
-        >
-          {tagSelectedItem}
-        </Button>
-      ))}
+      <Layout
+        style={styles.containerTags}
+        level='1'
+      >
+        {tagsSelected.map((tagSelectedItem, index) => (
+          <Button
+            key={`tagSelected-${index}`}
+            onPress={() => {
+              const nextTagsSelected = tagsSelected.filter((selectedTag) => selectedTag !== tagSelectedItem);
+              handleListTags(nextTagsSelected);
+            }}
+            size='tiny'
+            status="basic"
+            style={{ ...styles.marginRight10, ...styles.tag }}
+          >
+            {tagSelectedItem}
+          </Button>
+        ))}
+      </Layout>
     </>
   );
 };
 
 const styles = StyleSheet.create({
+  containerTags: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flexWrap: 'wrap',
+  },
   marginRight10: {
     marginRight: 10,
   },
