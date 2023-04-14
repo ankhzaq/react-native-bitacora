@@ -80,7 +80,7 @@ const ImageItem = ({ enableAddTags = false, handleTags, tagsSelectedDefault = []
             }}
             size='tiny'
             status="basic"
-            style={{ ...styles.marginRight10, ...styles.tag }}
+            style={styles.tag}
           >
             {tagSelectedItem}
           </Button>
@@ -92,12 +92,11 @@ const ImageItem = ({ enableAddTags = false, handleTags, tagsSelectedDefault = []
 
 const styles = StyleSheet.create({
   containerTags: {
-    flexDirection: 'row',
+    display: 'flex',
     alignItems: 'center',
+    flexDirection: 'row',
     flexWrap: 'wrap',
-  },
-  marginRight10: {
-    marginRight: 10,
+    justifyContent:'space-between'
   },
   tag: {
     width: 'auto',
