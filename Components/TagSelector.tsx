@@ -73,13 +73,14 @@ const ImageItem = ({ enableAddTags = false, handleTags, tagsSelectedDefault = []
       >
         {tagsSelected.map((tagSelectedItem, index) => (
           <Button
+            appearance="outline"
             key={`tagSelected-${index}`}
             onPress={() => {
               const nextTagsSelected = tagsSelected.filter((selectedTag) => selectedTag !== tagSelectedItem);
               handleListTags(nextTagsSelected);
             }}
             size='tiny'
-            status="basic"
+            status="warning"
             style={styles.tag}
           >
             {tagSelectedItem}
@@ -92,14 +93,16 @@ const ImageItem = ({ enableAddTags = false, handleTags, tagsSelectedDefault = []
 
 const styles = StyleSheet.create({
   containerTags: {
-    display: 'flex',
     alignItems: 'center',
+    display: 'flex',
     flexDirection: 'row',
     flexWrap: 'wrap',
-    justifyContent:'space-between'
+    justifyContent:'space-between',
+    padding: 10,
   },
   tag: {
     width: 'auto',
+    marginBottom: 10,
   }
 });
 
