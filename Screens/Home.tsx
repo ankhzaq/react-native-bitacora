@@ -92,7 +92,7 @@ const Home = () => {
             <View style={styles.container}>
               <Pressable
                 onPress={() => {
-                  navigation.navigate(ROUTES.detail, {data: item});
+                  navigation.navigate(ROUTES.detail, { data: item });
                 }}
               >
                 {!!item.images && (
@@ -100,6 +100,9 @@ const Home = () => {
                     images={item.images}
                     onRemove={() => deleteItem(item)}
                   />
+                )}
+                {!!item.value && (
+                  <Text style={styles.tag}>value: {item.value}</Text>
                 )}
                 <View style={styles.tagsContainer}>
                   <ScrollView>
