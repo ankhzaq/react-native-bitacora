@@ -102,7 +102,7 @@ const Home = () => {
                   />
                 )}
                 {!!item.value && (
-                  <Text style={styles.tag}>value: {item.value}</Text>
+                  <Text style={{ ...styles.tag, ...styles.tagValue}}>value: {item.value}</Text>
                 )}
                 <View style={styles.tagsContainer}>
                   <ScrollView>
@@ -146,6 +146,11 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     margin: 2,
     padding: 2,
+  },
+  tagValue: {
+    alignSelf: 'flex-start',
+    backgroundColor: '#60bc7c',
+    borderColor: '#5cbc90',
   },
   tagsContainer: {
     display: 'flex',
