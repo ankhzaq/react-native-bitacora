@@ -88,6 +88,8 @@ const Home = () => {
         data={dataToShow}
         numColumns={2}
         renderItem={({ item }: { item: ItemToShow }) => {
+          const yearItem = new Date(item.createdAt).getFullYear().toString();
+          const dateToShow = `${new Date(item.createdAt).toString().split(yearItem)[0]} ${yearItem}`
           return (
             <View style={styles.container}>
               <Pressable
@@ -95,6 +97,7 @@ const Home = () => {
                   navigation.navigate(ROUTES.detail, { data: item });
                 }}
               >
+                <Text>{dateToShow}</Text>
                 {!!item.images && (
                   <ImageItem
                     images={item.images}
