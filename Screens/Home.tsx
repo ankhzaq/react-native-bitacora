@@ -97,7 +97,9 @@ const Home = () => {
                   navigation.navigate(ROUTES.detail, { data: item });
                 }}
               >
-                <Text>{dateToShow}</Text>
+                <Layout style={styles.dateWrapper}>
+                  <Text style={styles.date} >{dateToShow}</Text>
+                </Layout>
                 {!!item.images && (
                   <ImageItem
                     images={item.images}
@@ -218,6 +220,13 @@ const styles = StyleSheet.create({
   },
   cluesWrapper: {
     marginLeft: 15,
+  },
+  date: {
+    fontSize: 12,
+  },
+  dateWrapper: {
+    backgroundColor: 'rgba(52, 52, 52, 0)',
+    marginLeft: 'auto',
   },
   titleSection: {
     height: 64,
