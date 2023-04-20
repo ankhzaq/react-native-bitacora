@@ -227,6 +227,7 @@ const styles = StyleSheet.create({
   dateWrapper: {
     backgroundColor: 'rgba(52, 52, 52, 0)',
     marginLeft: 'auto',
+    marginBottom: 5,
   },
   titleSection: {
     height: 64,
