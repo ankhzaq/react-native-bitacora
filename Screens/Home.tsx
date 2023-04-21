@@ -75,6 +75,14 @@ const Home = () => {
       <FontAwesome name="user-o" onPress={pressHandler} style={{ margin: 15 }} />
       <Button
         onPress={() => {
+          navigation.navigate(ROUTES.graphic);
+        }}
+        style={{ marginLeft: 15, marginBottom: 15, }}
+      >
+        Watch graphic
+      </Button>
+      <Button
+        onPress={() => {
           navigation.navigate(ROUTES.detail);
         }}
         style={{ marginLeft: 15 }}
