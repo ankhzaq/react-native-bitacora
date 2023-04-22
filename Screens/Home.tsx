@@ -108,11 +108,20 @@ const Home = () => {
                 <Layout style={styles.dateWrapper}>
                   <Text style={styles.date} >{dateToShow}</Text>
                 </Layout>
-                {!!item.images && (
+                {!!item.images ? (
                   <ImageItem
                     images={item.images}
                     onRemove={() => deleteItem(item)}
                   />
+                ) : (
+                  <Layout style={styles.trashIconWrapper}>
+                    <FontAwesome
+                      name="trash"
+                      color="red"
+                      onPress={() => deleteItem(item)}
+                      style={styles.trashIcon}
+                    />
+                  </Layout>
                 )}
                 {!!item.value && (
                   <Text style={{ ...styles.tag, ...styles.tagValue}}>value: {item.value}</Text>
@@ -243,9 +252,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   trashIcon:{
-    marginTop:5,
-    fontSize:20,
-    marginLeft:14,
+    fontSize: 18,
+    float: 'right',
+  },
+  trashIconWrapper: {
+    backgroundColor: 'rgba(52, 52, 52, 0)',
+    marginLeft: 'auto',
   }
 });
 
