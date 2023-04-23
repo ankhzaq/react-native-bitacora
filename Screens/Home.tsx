@@ -16,6 +16,12 @@ const Home = () => {
 
   const navigation = useNavigation();
 
+  const removeImageItem = (data: ItemWithId, image: string) => {
+    const nextData = JSON.parse(JSON.stringify(data));
+    nextData.images = data.images.filter((imageItem) => imageItem !== image);
+    dataRef.doc(nextData?.id).update(nextData);
+  }
+
   const pressHandler = async () => {
     try {
       LocalAuthentication.authenticateAsync({
@@ -111,7 +117,7 @@ const Home = () => {
                 {!!item.images ? (
                   <ImageItem
                     images={item.images}
-                    onRemove={() => deleteItem(item)}
+                    onRemove={(image: string) => removeImageItem(item, image)}
                   />
                 ) : (
                   <Layout style={styles.trashIconWrapper}>

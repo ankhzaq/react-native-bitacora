@@ -6,7 +6,7 @@ import { ITEM_MAX_HEIGHT, ITEM_MAX_WIDTH } from '../constants';
 
 interface Props {
   images?: string[];
-  onRemove?: () => void;
+  onRemove?: (image: string) => void;
 }
 
 const ImageItem = ({ images, onRemove }: Props) => {
@@ -22,7 +22,7 @@ const ImageItem = ({ images, onRemove }: Props) => {
         <FontAwesome
           name="trash"
           color="red"
-          onPress={onRemove}
+          onPress={() => onRemove(images[index])}
           style={styles.trashIcon}
         />
       </Layout>
