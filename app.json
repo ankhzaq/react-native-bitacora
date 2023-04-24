@@ -27,7 +27,8 @@
       },
       "permissions": [
         "android.permission.RECORD_AUDIO"
-      ]
+      ],
+      "package": "com.darthzaq.bitacora"
     },
     "plugins": [
       [
@@ -42,7 +43,7 @@
     },
     "extra": {
       "eas": {
-        "projectId": "f113fb69-2ded-4ae2-999c-93690752f844"
+        "projectId": "5c4289cc-f108-423b-95f1-652f860ea88f"
       }
     }
   }
