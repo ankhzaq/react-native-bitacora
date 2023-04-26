@@ -100,7 +100,7 @@ const Home = () => {
       </Layout>
       <FlatList
         data={dataToShow}
-        numColumns={2}
+        numColumns={1}
         renderItem={({ item }: { item: ItemToShow }) => {
           const yearItem = new Date(item.createdAt).getFullYear().toString();
           const dateToShow = `${new Date(item.createdAt).toString().split(yearItem)[0]} ${yearItem}`
