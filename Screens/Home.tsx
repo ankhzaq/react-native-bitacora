@@ -111,23 +111,25 @@ const Home = () => {
                   navigation.navigate(ROUTES.detail, { data: item });
                 }}
               >
-                <Layout style={styles.dateWrapper}>
-                  <Text style={styles.date} >{dateToShow}</Text>
+                <Layout style={{ ...styles.header, ...styles.backgroundColorWrapper}}>
+                  <Text>{dateToShow}</Text>
+                  <Layout style={{ ...styles.dateWrapper, ...styles.backgroundColorWrapper }}>
+                    <Layout style={{ ...styles.trashIconWrapper, ...styles.backgroundColorWrapper }}>
+                      <FontAwesome
+                        name="trash"
+                        color="red"
+                        onPress={() => deleteItem(item)}
+                        style={styles.trashIcon}
+                      />
+                      <Text style={styles.trashText} >Delete</Text>
+                    </Layout>
+                  </Layout>
                 </Layout>
-                {!!item.images ? (
+                {!!item.images && (
                   <ImageItem
                     images={item.images}
                     onRemove={(image: string) => removeImageItem(item, image)}
                   />
-                ) : (
-                  <Layout style={styles.trashIconWrapper}>
-                    <FontAwesome
-                      name="trash"
-                      color="red"
-                      onPress={() => deleteItem(item)}
-                      style={styles.trashIcon}
-                    />
-                  </Layout>
                 )}
                 {!!item.value && (
                   <Text style={{ ...styles.tag, ...styles.tagValue}}>value: {item.value}</Text>
@@ -153,6 +155,10 @@ const Home = () => {
 const styles = StyleSheet.create({
   backdrop: {
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  header: {
+    display: 'flex',
+    flexDirection: 'row',
   },
   container: {
     backgroundColor: '#e5e5e5',
@@ -185,7 +191,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     marginTop: 5,
-    maxWidth: ITEM_MAX_WIDTH,
   },
   image: {
     display: 'flex',
@@ -248,7 +253,6 @@ const styles = StyleSheet.create({
     fontSize: 12,
   },
   dateWrapper: {
-    backgroundColor: 'rgba(52, 52, 52, 0)',
     marginLeft: 'auto',
     marginBottom: 5,
   },
@@ -262,9 +266,16 @@ const styles = StyleSheet.create({
     float: 'right',
   },
   trashIconWrapper: {
-    backgroundColor: 'rgba(52, 52, 52, 0)',
+    display: 'flex',
+    flexDirection: 'row',
     marginLeft: 'auto',
-  }
+  },
+  trashText: {
+    marginLeft: 5,
+  },
+  backgroundColorWrapper: {
+    backgroundColor: 'rgba(52, 52, 52, 0)',
+  },
 });
 
 export default Home
