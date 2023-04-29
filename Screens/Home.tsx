@@ -8,7 +8,6 @@ import { ItemToShow, ItemWithId } from '../types/item';
 import ImageItem from '../Components/ImageItem';
 import * as LocalAuthentication from 'expo-local-authentication';
 import { useNavigation } from '@react-navigation/native';
-import { ITEM_MAX_WIDTH } from '../constants';
 
 const Home = () => {
   const [data, setData] = useState([]);
@@ -115,13 +114,21 @@ const Home = () => {
                   <Text>{dateToShow}</Text>
                   <Layout style={{ ...styles.dateWrapper, ...styles.backgroundColorWrapper }}>
                     <Layout style={{ ...styles.trashIconWrapper, ...styles.backgroundColorWrapper }}>
-                      <FontAwesome
-                        name="trash"
-                        color="red"
+                      <Button
+                        accessoryLeft={
+                          <FontAwesome
+                            name="trash"
+                            color="red"
+                            style={styles.trashIcon}
+                          />
+                        }
+                        appearance='outline'
                         onPress={() => deleteItem(item)}
-                        style={styles.trashIcon}
-                      />
-                      <Text style={styles.trashText} >Delete</Text>
+                        size="small"
+                        status='danger'
+                      >
+                        Delete
+                      </Button>
                     </Layout>
                   </Layout>
                 </Layout>
@@ -157,8 +164,11 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
   header: {
+    alignItems: 'center',
     display: 'flex',
     flexDirection: 'row',
+    marginBottom: 10,
+    width: '100%',
   },
   container: {
     backgroundColor: '#e5e5e5',
@@ -254,7 +264,6 @@ const styles = StyleSheet.create({
   },
   dateWrapper: {
     marginLeft: 'auto',
-    marginBottom: 5,
   },
   titleSection: {
     height: 64,
