@@ -282,7 +282,7 @@ const Detail = ({ route }) => {
                   )): (<Text>0 images selected</Text>)}
                 </View>
                 <Text category='h6'>Images Availables</Text>
-                <View style={styles.imagesContainer}>
+                <ScrollView horizontal style={styles.imagesContainer}>
                   {imagesToShow ? imagesToShow.map((image: string) => (
                     <TouchableHighlight onPress={() => {
                       selectImage(image);
@@ -293,7 +293,7 @@ const Detail = ({ route }) => {
                       />
                     </TouchableHighlight>
                   )): (<Text>0 images uploaded</Text>)}
-                </View>
+                </ScrollView>
                 <Layout style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-around', marginTop: 10 }}>
                   <Button onPress={takeAndUploadPhotoAsync}>
                     Upload
