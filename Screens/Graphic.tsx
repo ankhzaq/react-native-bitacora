@@ -5,11 +5,12 @@ import { CHART_CONFIG } from '../constants';
 import { LineChart } from 'react-native-chart-kit';
 import TagSelector from '../Components/TagSelector';
 
-const Graphic = () => {
+const Graphic = ({ route }) => {
+  const { tags: tagsParams } = route.params;
   const dataRef = firebase.firestore().collection('bitacora');
   const [tagsSelected, setTagsSelected] = useState([]);
   const [data, setData] = useState([]);
-  const [tags, setTags] = useState([]);
+  const [tags, setTags] = useState(tagsParams || []);
   const [dataGraphic, setDataGraphic] = useState(null);
 
   useEffect(() => {

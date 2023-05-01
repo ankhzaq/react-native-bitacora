@@ -1,6 +1,6 @@
 import { View, FlatList, StyleSheet, Pressable } from 'react-native'
 import { Button, Layout, Text } from '@ui-kitten/components';
-import React, { useState, useEffect, useMemo } from 'react'
+import React, { useState, useEffect, useMemo, useCallback } from 'react'
 import { ScrollView } from 'react-native';
 import { firebase, ROUTES } from '../config';
 import { FontAwesome } from "@expo/vector-icons";
@@ -75,6 +75,12 @@ const Home = () => {
     return data;
   }, [data]);
 
+  const tagClicked = useCallback((tag) => {
+    navigation.navigate(ROUTES.graphic, {
+      tags: [tag]
+    });
+  }, []);
+
   return (
     <Layout style={{ flex: 1, paddingHorizontal: 10 }}>
       <FontAwesome name="user-o" onPress={pressHandler} style={{ margin: 15 }} />
@@ -145,7 +151,7 @@ const Home = () => {
                   <ScrollView>
                     <View style={styles.tagsContainer}>
                       {item.tags.map((tagItem: string) => (
-                        <Text style={styles.tag}>{tagItem}</Text>
+                        <Text onPress={() => tagClicked(tagItem)} style={styles.tag}>{tagItem}</Text>
                       ))}
                     </View>
                   </ScrollView>
