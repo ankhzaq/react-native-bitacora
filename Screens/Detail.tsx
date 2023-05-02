@@ -1,6 +1,6 @@
 import { Image, Keyboard, StyleSheet, View } from 'react-native'
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { Autocomplete, AutocompleteItem, Button, Input, Layout, Tab, TabBar, Text } from '@ui-kitten/components';
+import React, { useEffect, useMemo, useState } from 'react';
+import {  Button, Input, Layout, Tab, TabBar, Text } from '@ui-kitten/components';
 import { FontAwesome } from '@expo/vector-icons';
 import { ScrollView, TouchableHighlight } from 'react-native-gesture-handler';
 import DateSelector from '../Components/DateSelector';
@@ -43,6 +43,7 @@ const Detail = ({ route }) => {
   const [tabIndexSelected, setTabIndexSelected] = useState(!dataItem?.isQuickCard ? 1 : 0);
 
   const [value, setValue] = useState(dataItem?.value || 0);
+  const [loading, setLoading] = useState(false);
   const [clues, setClues] = useState(dataItem?.clues || [initialClueState]);
   const [searchImages, setSearchImages] = useState('');
   const [images, setImages] = useState<string[]>([]);
@@ -108,10 +109,12 @@ const Detail = ({ route }) => {
 
   const handleGetImages = async () => {
     if (searchImages.length) {
+      setLoading(true);
       const response = await fetch(`${apiConfig.baseUrl}?q=${searchImages}&tbm=${apiConfig.tbm}&ijn=${apiConfig.ijn}&api_key=${apiConfig.api_key}`);
       const data = await response.json();
       const nextImages = data.images_results.map((image) => image.original).slice(0,10);
       setImages(nextImages)
+      setLoading(false);
     }
   }
 

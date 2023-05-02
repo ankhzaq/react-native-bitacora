@@ -42,7 +42,8 @@ const ImageItem = ({ enableAddTags = false, handleTags, tagsSelectedDefault = []
           setTagAutocompleted('');
           handleListTags(tagsSelected.concat([tagsForAutoCompleted()[index]]));
         }}
-        onChangeText={(text) => setTagAutocompleted(text)}>
+        onChangeText={(text) => setTagAutocompleted(text)}
+      >
         { tagsForAutoCompleted().map((tagItem) => (
           <AutocompleteItem
             key={tagItem}
