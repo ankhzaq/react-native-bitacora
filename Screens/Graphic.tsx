@@ -8,9 +8,9 @@ import TagSelector from '../Components/TagSelector';
 const Graphic = ({ route }) => {
   const { tags: tagsParams } = route.params;
   const dataRef = firebase.firestore().collection('bitacora');
-  const [tagsSelected, setTagsSelected] = useState([]);
+  const [tagsSelected, setTagsSelected] = useState(tagsParams || []);
   const [data, setData] = useState([]);
-  const [tags, setTags] = useState(tagsParams || []);
+  const [tags, setTags] = useState( []);
   const [dataGraphic, setDataGraphic] = useState(null);
 
   useEffect(() => {
