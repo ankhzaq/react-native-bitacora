@@ -7,6 +7,7 @@ import TagSelector from '../Components/TagSelector';
 
 const Graphic = ({ route }) => {
   const { tags: tagsParams } = route.params;
+  console.log("tagsParams: ", tagsParams);
   const dataRef = firebase.firestore().collection('bitacora');
   const [tagsSelected, setTagsSelected] = useState(tagsParams || []);
   const [data, setData] = useState([]);
@@ -20,6 +21,8 @@ const Graphic = ({ route }) => {
         return (item.value !== undefined) && validTags;
       });
 
+      const isDataGraphicValid = !!graphicData.length;
+
       const dataGraphic = {
         labels: graphicData.map((item) => item.createdAt.split('T')[0]),
         datasets: [
@@ -29,7 +32,7 @@ const Graphic = ({ route }) => {
         ],
         legend: ["GRAPHIC"] // optional
       };
-      setDataGraphic(dataGraphic);
+      setDataGraphic(isDataGraphicValid ? dataGraphic : null);
     }
   }, [data, tagsSelected]);
 
@@ -51,6 +54,9 @@ const Graphic = ({ route }) => {
           setTags(tagsCreated);
         })
   }, []);
+
+  console.log("dataGraphic: ", dataGraphic);
+  console.log("datasets: ", dataGraphic?.datasets && dataGraphic?.datasets[0]);
 
   return (
     <>
