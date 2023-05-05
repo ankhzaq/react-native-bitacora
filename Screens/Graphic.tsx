@@ -4,6 +4,7 @@ import { firebase } from '../config';
 import { CHART_CONFIG } from '../constants';
 import { LineChart } from 'react-native-chart-kit';
 import TagSelector from '../Components/TagSelector';
+import { Text } from '@ui-kitten/components';
 
 const Graphic = ({ route }) => {
   const { tags: tagsParams } = route.params;
@@ -55,20 +56,19 @@ const Graphic = ({ route }) => {
         })
   }, []);
 
-  console.log("dataGraphic: ", dataGraphic);
-  console.log("datasets: ", dataGraphic?.datasets && dataGraphic?.datasets[0]);
-
   return (
     <>
       <TagSelector enableAddTags handleTags={(nextTags) => setTagsSelected(nextTags)} tagsDefault={tags} tagsSelectedDefault={tagsSelected} />
       {
-        dataGraphic && (
+        dataGraphic ? (
           <LineChart
             data={dataGraphic}
             width={Dimensions.get('window').width}
             height={220}
             chartConfig={CHART_CONFIG}
           />
+        ) : (
+          <Text>NO DATA AVAILABLE WITH THE CURRENT SEARCH PARAMETERES</Text>
         )
       }
     </>
