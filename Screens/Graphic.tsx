@@ -1,4 +1,4 @@
-import { Dimensions } from 'react-native'
+import { Dimensions, StyleSheet } from 'react-native'
 import React, { useEffect, useState } from 'react';
 import { firebase } from '../config';
 import { CHART_CONFIG } from '../constants';
@@ -68,7 +68,7 @@ const Graphic = ({ route }) => {
             chartConfig={CHART_CONFIG}
           />
         ) : (
-          <Text>NO DATA AVAILABLE WITH THE CURRENT SEARCH PARAMETERES</Text>
+          <Text style={styles.noGraphicDataMessage}>NO DATA AVAILABLE WITH THE CURRENT SEARCH PARAMETERES</Text>
         )
       }
     </>
@@ -76,3 +76,10 @@ const Graphic = ({ route }) => {
 };
 
 export default Graphic;
+
+const styles = StyleSheet.create({
+  noGraphicDataMessage: {
+    margin: 10,
+    textAlign: 'center',
+  }
+});
