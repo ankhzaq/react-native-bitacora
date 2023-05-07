@@ -18,7 +18,7 @@ const Graphic = ({ route }) => {
   useEffect(() => {
     if (data.length) {
       const graphicData = data.filter((item) => {
-        const validTags = !tagsSelected.length || tagsSelected.some((tagSelected) => item.tags.includes(tagSelected));
+        const validTags = !tagsSelected.length || tagsSelected.some((tagSelected) => item.tags.includes(tagSelected) && item.value);
         return (item.value !== undefined) && validTags;
       });
 
