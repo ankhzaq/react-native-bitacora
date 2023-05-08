@@ -1,6 +1,6 @@
 import { Image, Keyboard, StyleSheet, View } from 'react-native'
 import React, { useEffect, useMemo, useState } from 'react';
-import {  Button, Input, Layout, Tab, TabBar, Text } from '@ui-kitten/components';
+import { Button, Input, Layout, Tab, TabBar, Text } from '@ui-kitten/components';
 import { FontAwesome } from '@expo/vector-icons';
 import { ScrollView, TouchableHighlight } from 'react-native-gesture-handler';
 import DateSelector from '../Components/DateSelector';
@@ -220,9 +220,12 @@ const Detail = ({ route }) => {
         {
           tabIndexSelected === 1 && (
             <>
-              <Text style={styles.cluesText}>
-                Clues
-              </Text>
+              <View style={styles.cluesContainer}>
+                <Text style={styles.cluesText}>
+                  Clues
+                </Text>
+                <Button size='tiny' status='basic'>Show all clues</Button>
+              </View>
               {
                 clues.map((clue, index) => (
                   <View>
@@ -337,6 +340,10 @@ const styles = StyleSheet.create({
   },
   marginRight10: {
     marginRight: 10,
+  },
+  cluesContainer: {
+    alignItems: 'center',
+    flexDirection: 'row',
   },
   container: {
     backgroundColor: '#e5e5e5',
