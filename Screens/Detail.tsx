@@ -1,7 +1,7 @@
 import { Image, Keyboard, StyleSheet, View } from 'react-native'
 import React, { useEffect, useMemo, useState } from 'react';
 import { Button, Input, Layout, Tab, TabBar, Text } from '@ui-kitten/components';
-import { FontAwesome } from '@expo/vector-icons';
+import { MaterialIcons, FontAwesome } from '@expo/vector-icons';
 import { ScrollView, TouchableHighlight } from 'react-native-gesture-handler';
 import DateSelector from '../Components/DateSelector';
 import { apiConfig, firebase, ROUTES } from '../config';
@@ -262,6 +262,7 @@ const Detail = ({ route }) => {
               }
               <Layout style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop: 15 }}>
                 <Input
+                  accessoryLeft={loading && <MaterialIcons name="youtube-searched-for" size={24} color="black" />}
                   label='Search images'
                   placeholderTextColor="#aaaaaa"
                   onChangeText={(text) => {
