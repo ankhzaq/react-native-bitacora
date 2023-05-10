@@ -263,6 +263,7 @@ const Detail = ({ route }) => {
               <Layout style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop: 15 }}>
                 <Input
                   accessoryLeft={loading && <MaterialIcons name="youtube-searched-for" size={24} color="black" />}
+                  disabled={loading}
                   label='Search images'
                   placeholderTextColor="#aaaaaa"
                   onChangeText={(text) => {
