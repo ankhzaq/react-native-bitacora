@@ -44,7 +44,8 @@ const Detail = ({ route }) => {
 
   const [value, setValue] = useState(dataItem?.value || 0);
   const [loading, setLoading] = useState(false);
-  const [showClues, setShowClues] = useState(false);
+  const [showAllClues, setShowAllClues] = useState(false);
+  const [numCluesToShow, setNumCluesCluesToShow] = useState(0);
   const [clues, setClues] = useState(dataItem?.clues || [initialClueState]);
   const [searchImages, setSearchImages] = useState('');
   const [images, setImages] = useState<string[]>([]);
@@ -225,10 +226,11 @@ const Detail = ({ route }) => {
                 <Text style={styles.cluesText}>
                   Clues
                 </Text>
-                <Button size='tiny' status='basic' onPress={() => setShowClues(!showClues)}>{`${showClues ? 'Hide' : 'Show'} all clues`}</Button>
+                <Button size='tiny' status='basic' onPress={() => setShowAllClues(!showAllClues)}>{`${showAllClues ? 'Hide' : 'Show'} all clues`}</Button>
+                <Button size='tiny' status='basic' onPress={() => setShowAllClues(!showAllClues)}>+1</Button>
               </View>
               {
-                showClues && clues.map((clue, index) => (
+                showAllClues && clues.map((clue, index) => (
                   <View>
                     <Layout style={styles.cluesWrapper}>
                       <Input
