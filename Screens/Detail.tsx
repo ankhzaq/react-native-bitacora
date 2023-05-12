@@ -1,5 +1,5 @@
 import { Image, Keyboard, StyleSheet, View } from 'react-native'
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Button, Input, Layout, Tab, TabBar, Text } from '@ui-kitten/components';
 import { MaterialIcons, FontAwesome } from '@expo/vector-icons';
 import { ScrollView, TouchableHighlight } from 'react-native-gesture-handler';
@@ -181,6 +181,21 @@ const Detail = ({ route }) => {
 
   const addUpdateBtnDisabled = useMemo(() => !tagsSelected.length, [tagsSelected]);
 
+  const handlerShowAllClues = () => useCallback(() => {
+    setShowAllClues(!showAllClues)
+    setNumCluesCluesToShow(clues.length);
+  }, []);
+
+  useEffect(() => {
+    if (numCluesToShow === clues.length) setShowAllClues(true)
+    else if (numCluesToShow === 0) setShowAllClues(false)
+  }, [numCluesToShow]);
+
+
+  const handlerOneMoreClueToShow = () => useCallback(() => {
+    setNumCluesCluesToShow(numCluesToShow + 1);
+  }, []);
+
   return (
     <ScrollView style={styles.formLayout}>
       <Layout style={styles.titleSection}>
@@ -226,8 +241,8 @@ const Detail = ({ route }) => {
                 <Text style={styles.cluesText}>
                   Clues
                 </Text>
-                <Button size='tiny' status='basic' onPress={() => setShowAllClues(!showAllClues)}>{`${showAllClues ? 'Hide' : 'Show'} all clues`}</Button>
-                <Button size='tiny' status='basic' onPress={() => setShowAllClues(!showAllClues)}>+1</Button>
+                <Button size='tiny' status='basic' onPress={handlerShowAllClues}>{`${showAllClues ? 'Hide' : 'Show'} all clues`}</Button>
+                <Button size='tiny' status='basic' onPress={handlerOneMoreClueToShow}>+1</Button>
               </View>
               {
                 showAllClues && clues.map((clue, index) => (
