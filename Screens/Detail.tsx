@@ -42,7 +42,7 @@ const Detail = ({ route }) => {
 
   const [tabIndexSelected, setTabIndexSelected] = useState(!dataItem?.isQuickCard ? 1 : 0);
 
-  const [value, setValue] = useState(dataItem?.value || 0);
+  const [value, setValue] = useState(dataItem?.value || 1);
   const [loading, setLoading] = useState(false);
   const [showAllClues, setShowAllClues] = useState(false);
   const [numCluesToShow, setNumCluesCluesToShow] = useState(0);
@@ -181,20 +181,30 @@ const Detail = ({ route }) => {
 
   const addUpdateBtnDisabled = useMemo(() => !tagsSelected.length, [tagsSelected]);
 
-  const handlerShowAllClues = () => useCallback(() => {
-    setShowAllClues(!showAllClues)
-    setNumCluesCluesToShow(clues.length);
-  }, []);
+  const handlerShowAllClues = () => {
+    const nextShowAllClues = !showAllClues;
+    setShowAllClues(nextShowAllClues)
+    if (nextShowAllClues) setNumCluesCluesToShow(clues.length);
+    else setNumCluesCluesToShow(0);
+  };
 
   useEffect(() => {
     if (numCluesToShow === clues.length) setShowAllClues(true)
     else if (numCluesToShow === 0) setShowAllClues(false)
-  }, [numCluesToShow]);
+
+  }, [numCluesToShow, showAllClues]);
 
 
-  const handlerOneMoreClueToShow = () => useCallback(() => {
+  const handlerOneMoreClueToShow = () => {
     setNumCluesCluesToShow(numCluesToShow + 1);
-  }, []);
+  };
+
+  const handlerOneLessClueToShow = () => {
+    setNumCluesCluesToShow(numCluesToShow - 1);
+  };
+
+  const cluesToShow = useMemo(() => (clues || []).slice(0, numCluesToShow),[numCluesToShow]);
+
 
   return (
     <ScrollView style={styles.formLayout}>
@@ -217,7 +227,7 @@ const Detail = ({ route }) => {
                 placeholderTextColor="#aaaaaa"
                 onChangeText={(text) => {
                   const number = Number(text);
-                  if(!isNaN(number)) setValue(number)
+                  if(!isNaN(number) && number !== 0) setValue(number)
                 }}
                 value={value ? String(value) : ''}
                 underlineColorAndroid="transparent"
@@ -242,34 +252,35 @@ const Detail = ({ route }) => {
                   Clues
                 </Text>
                 <Button size='tiny' status='basic' onPress={handlerShowAllClues}>{`${showAllClues ? 'Hide' : 'Show'} all clues`}</Button>
-                <Button size='tiny' status='basic' onPress={handlerOneMoreClueToShow}>+1</Button>
+                <Button size='tiny' status='basic' disabled={numCluesToShow === clues.length} onPress={handlerOneMoreClueToShow}>+1</Button>
+                <Button size='tiny' status='basic' disabled={numCluesToShow === 0} onPress={handlerOneLessClueToShow}>-1</Button>
               </View>
               {
-                showAllClues && clues.map((clue, index) => (
+                cluesToShow.map((clue, index) => (
                   <View>
                     <Layout style={styles.cluesWrapper}>
                       <Input
                         size='small'
-                        label={`Question - ${index}`}
+                        label={`Question - ${index + 1}`}
                         onChangeText={(text) => {
                           const nextClues = JSON.parse(JSON.stringify(clues));
                           nextClues[index].question = text;
                           setClues(nextClues)
                         }}
-                        value={clue.question}
+                        value={clue.question || ''}
                         underlineColorAndroid="transparent"
                         autoCapitalize="none"
                       />
                       <Input
                         accessoryRight={(props) => renderIconClueIcon(props, index)}
-                        label={`Answer - ${index}`}
+                        label={`Answer - ${index + 1}`}
                         onChangeText={(text) => {
                           const nextClues = JSON.parse(JSON.stringify(clues));
                           nextClues[index].answer = text;
                           setClues(nextClues)
                         }}
                         size='small'
-                        value={clue.answer}
+                        value={clue.answer || ''}
                         underlineColorAndroid="transparent"
                         autoCapitalize="none"
                       />
