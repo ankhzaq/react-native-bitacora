@@ -45,6 +45,7 @@ const Detail = ({ route }) => {
   const [value, setValue] = useState(dataItem?.value || 1);
   const [loading, setLoading] = useState(false);
   const [showAllClues, setShowAllClues] = useState(false);
+  const [answersToShow, setAnswersToShow] = useState<number[]>([]);
   const [numCluesToShow, setNumCluesCluesToShow] = useState(0);
   const [clues, setClues] = useState(dataItem?.clues || [initialClueState]);
   const [searchImages, setSearchImages] = useState('');
@@ -203,6 +204,11 @@ const Detail = ({ route }) => {
     setNumCluesCluesToShow(numCluesToShow - 1);
   };
 
+  const handlerAnswersToShow = (answerIndex: number) => {
+    if (answersToShow.includes(answerIndex)) setAnswersToShow(answersToShow.filter(answer => answer !== answerIndex))
+    else setAnswersToShow(answersToShow.concat([answerIndex]));
+  };
+
   const cluesToShow = useMemo(() => (clues || []).slice(0, numCluesToShow),[numCluesToShow]);
 
 
@@ -252,7 +258,7 @@ const Detail = ({ route }) => {
                   Clues
                 </Text>
                 <Button size='tiny' status='basic' onPress={handlerShowAllClues}>{`${showAllClues ? 'Hide' : 'Show'} all clues`}</Button>
-                <Button size='tiny' status='basic' disabled={numCluesToShow === clues.length} onPress={handlerOneMoreClueToShow}>+1</Button>
+                <Button size='tiny' style={styles.cluesBtns} status='basic' disabled={numCluesToShow === clues.length} onPress={handlerOneMoreClueToShow}>+1</Button>
                 <Button size='tiny' status='basic' disabled={numCluesToShow === 0} onPress={handlerOneLessClueToShow}>-1</Button>
               </View>
               {
@@ -279,8 +285,9 @@ const Detail = ({ route }) => {
                           nextClues[index].answer = text;
                           setClues(nextClues)
                         }}
+                        onFocus={() => handlerAnswersToShow(index)}
                         size='small'
-                        value={clue.answer || ''}
+                        value={answersToShow.includes(index) ? (clue.answer || '') : ''}
                         underlineColorAndroid="transparent"
                         autoCapitalize="none"
                       />
@@ -375,6 +382,9 @@ const styles = StyleSheet.create({
   cluesContainer: {
     alignItems: 'center',
     flexDirection: 'row',
+  },
+  cluesBtns: {
+    marginHorizontal: 5,
   },
   container: {
     backgroundColor: '#e5e5e5',
