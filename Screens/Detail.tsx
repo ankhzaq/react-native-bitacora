@@ -186,7 +186,10 @@ const Detail = ({ route }) => {
     const nextShowAllClues = !showAllClues;
     setShowAllClues(nextShowAllClues)
     if (nextShowAllClues) setNumCluesCluesToShow(clues.length);
-    else setNumCluesCluesToShow(0);
+    else {
+      setNumCluesCluesToShow(0);
+      setAnswersToShow([]);
+    }
   };
 
   useEffect(() => {
@@ -202,6 +205,10 @@ const Detail = ({ route }) => {
 
   const handlerOneLessClueToShow = () => {
     setNumCluesCluesToShow(numCluesToShow - 1);
+    const indexAnswer = numCluesToShow - 1;
+    if (answersToShow.includes(indexAnswer)) {
+      setAnswersToShow(answersToShow.filter((answer) => answer !== indexAnswer));
+    }
   };
 
   const handlerAnswersToShow = (answerIndex: number) => {
