@@ -44,7 +44,6 @@ const Detail = ({ route }) => {
 
   const [value, setValue] = useState(dataItem?.value || 1);
   const [loading, setLoading] = useState(false);
-  const [showAllClues, setShowAllClues] = useState(false);
   const [answersToShow, setAnswersToShow] = useState<number[]>([]);
   const [numCluesToShow, setNumCluesCluesToShow] = useState(0);
   const [clues, setClues] = useState(dataItem?.clues || [initialClueState]);
@@ -53,6 +52,7 @@ const Detail = ({ route }) => {
   const [imagesSelected, setImagesSelected] = useState<string[]>(dataItem?.images || []);
 
   const navigation = useNavigation();
+
 
   useEffect(() => {
     dataRef
@@ -183,20 +183,13 @@ const Detail = ({ route }) => {
   const addUpdateBtnDisabled = useMemo(() => !tagsSelected.length, [tagsSelected]);
 
   const handlerShowAllClues = () => {
-    const nextShowAllClues = !showAllClues;
-    setShowAllClues(nextShowAllClues)
-    if (nextShowAllClues) setNumCluesCluesToShow(clues.length);
+    const showAllClues = numCluesToShow === clues.length;
+    if (showAllClues) setNumCluesCluesToShow(clues.length);
     else {
       setNumCluesCluesToShow(0);
       setAnswersToShow([]);
     }
   };
-
-  useEffect(() => {
-    if (numCluesToShow === clues.length) setShowAllClues(true)
-    else if (numCluesToShow === 0) setShowAllClues(false)
-
-  }, [numCluesToShow, showAllClues]);
 
 
   const handlerOneMoreClueToShow = () => {
@@ -216,7 +209,7 @@ const Detail = ({ route }) => {
     else setAnswersToShow(answersToShow.concat([answerIndex]));
   };
 
-  const cluesToShow = useMemo(() => (clues || []).slice(0, numCluesToShow),[numCluesToShow]);
+  const cluesToShow = useMemo(() => isEditMode ? (clues || []).slice(0, numCluesToShow) : clues,[numCluesToShow, clues]);
 
 
   return (
@@ -264,9 +257,15 @@ const Detail = ({ route }) => {
                 <Text style={styles.cluesText}>
                   Clues
                 </Text>
-                <Button size='tiny' status='basic' onPress={handlerShowAllClues}>{`${showAllClues ? 'Hide' : 'Show'} all clues`}</Button>
-                <Button size='tiny' style={styles.cluesBtns} status='basic' disabled={numCluesToShow === clues.length} onPress={handlerOneMoreClueToShow}>+1</Button>
-                <Button size='tiny' status='basic' disabled={numCluesToShow === 0} onPress={handlerOneLessClueToShow}>-1</Button>
+                {
+                  isEditMode && (
+                    <>
+                      <Button size='tiny' status='basic' onPress={handlerShowAllClues}>{`${numCluesToShow === clues.length ? 'Hide' : 'Show'} all clues`}</Button>
+                      <Button size='tiny' style={styles.cluesBtns} status='basic' disabled={numCluesToShow === clues.length} onPress={handlerOneMoreClueToShow}>+1</Button>
+                      <Button size='tiny' status='basic' disabled={numCluesToShow === 0} onPress={handlerOneLessClueToShow}>-1</Button>
+                    </>
+                  )
+                }
               </View>
               {
                 cluesToShow.map((clue, index) => (
