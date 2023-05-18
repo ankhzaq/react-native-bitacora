@@ -1,4 +1,4 @@
-import { StyleSheet } from 'react-native'
+import { Dimensions, StyleSheet } from 'react-native'
 import React, { useCallback, useEffect, useState } from 'react';
 import { Autocomplete, AutocompleteItem, Button, Layout } from '@ui-kitten/components';
 
@@ -24,9 +24,10 @@ const ImageItem = ({ enableAddTags = false, handleTags, tagsSelectedDefault = []
     setTagsSelected(tagsSelectedDefault)
   }, [tagsSelectedDefault]);
 
-  const tagsForAutoCompleted = useCallback((): string[] => (
-    tags.filter((tagText) => !tagsSelected.includes(tagText) && tagText.toLowerCase().includes(tagAutocompleted.toLowerCase()))
-  ), [tags, tagAutocompleted]);
+  const tagsForAutoCompleted = useCallback((): string[] => {
+    const tagsResult = tags.filter((tagText) => !tagsSelected.includes(tagText) && tagText.toLowerCase().includes(tagAutocompleted.toLowerCase()));
+    if (!tagsResult.length) return ['default tag']
+  }, [tags, tagAutocompleted]);
 
   const handleListTags = (nextTags: string[]) => {
     setTagsSelected(nextTags);
@@ -38,15 +39,16 @@ const ImageItem = ({ enableAddTags = false, handleTags, tagsSelectedDefault = []
       <Autocomplete
         placeholder='Add tags...'
         value={tagAutocompleted}
+        style={{ minWidth: Dimensions.get('window').width }}
         onSelect={(index) => {
           setTagAutocompleted('');
           handleListTags(tagsSelected.concat([tagsForAutoCompleted()[index]]));
         }}
         onChangeText={(text) => setTagAutocompleted(text)}
       >
-        { tagsForAutoCompleted().map((tagItem) => (
+        { tagsForAutoCompleted().map((tagItem, index) => (
           <AutocompleteItem
-            key={tagItem}
+            key={`autocompleteItem-${index}`}
             title={tagItem}
           />
         ))}
@@ -63,7 +65,6 @@ const ImageItem = ({ enableAddTags = false, handleTags, tagsSelectedDefault = []
             handleListTags(nextTagsSelected);
           }}
           status="success"
-          style={styles.marginRight10}
         >
           New Tag
         </Button>
