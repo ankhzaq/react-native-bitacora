@@ -125,6 +125,10 @@ const Detail = ({ route }) => {
     setDate(newDate);
   }
 
+  const addClue = () => {
+    setClues(clues.concat([initialClueState]));
+  }
+
   const renderIconClueIcon = (props, index) => {
     const removeClue = () => {
       const nextClues = JSON.parse(JSON.stringify(clues));
@@ -132,19 +136,10 @@ const Detail = ({ route }) => {
       setClues(nextClues);
     }
 
-    const addClue = () => {
-      setClues(clues.concat([initialClueState]));
-    }
-
-    const disabled = !clues[index].question.length || !clues[index].answer.length;
-
     return (
       <>
         {!!index && (
           <FontAwesome name="trash" onPress={removeClue} style={{ marginRight: 15 }} />
-        )}
-        {index === (clues.length - 1) && (
-          <FontAwesome disabled={disabled} name="plus-circle" onPress={addClue} style={{ marginRight: 15 }} />
         )}
       </>
     )
@@ -257,6 +252,7 @@ const Detail = ({ route }) => {
                 <Text style={styles.cluesText}>
                   Clues
                 </Text>
+                <Button size='tiny' status='basic' onPress={addClue}>Add clue</Button>
                 {
                   isEditMode && (
                     <>
