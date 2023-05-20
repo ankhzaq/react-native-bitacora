@@ -37,7 +37,7 @@ const ImageItem = ({ enableAddTags = false, handleTags, tagsSelectedDefault = []
   return (
     <>
       <Autocomplete
-        placeholder='Add tags...'
+        placeholder='Add tags... (required)'
         value={tagAutocompleted}
         style={{ minWidth: Dimensions.get('window').width }}
         onSelect={(index) => {
