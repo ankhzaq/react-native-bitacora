@@ -327,7 +327,7 @@ const Detail = ({ route }) => {
                     </TouchableHighlight>
                   )): (<Text>0 images selected</Text>)}
                 </View>
-                <Text category='h6'>Images Availables</Text>
+                <Text category='h6'>Images uploaded</Text>
                 <ScrollView horizontal style={styles.imagesContainer}>
                   {imagesToShow ? imagesToShow.map((image: string) => (
                     <TouchableHighlight onPress={() => {
