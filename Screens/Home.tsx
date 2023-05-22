@@ -100,9 +100,11 @@ const Home = () => {
       >
         Add Item
       </Button>
-      <Layout style={styles.titleSection}>
-        <Text category='h5'>LIST</Text>
-      </Layout>
+      {Boolean(dataToShow.length) && (
+        <Layout style={styles.titleSection}>
+          <Text category='h5'>LIST</Text>
+        </Layout>
+      )}
       <FlatList
         data={dataToShow}
         numColumns={1}
