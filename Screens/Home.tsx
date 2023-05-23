@@ -100,9 +100,13 @@ const Home = () => {
       >
         Add Item
       </Button>
-      {Boolean(dataToShow.length) && (
+      {Boolean(dataToShow.length) ? (
         <Layout style={styles.titleSection}>
           <Text category='h5'>LIST</Text>
+        </Layout>
+      ) : (
+        <Layout style={styles.titleSection}>
+          <Text>THERE ARE NOT ITEMS TO SHOW. PLEASE, ADD SOME ITEM TO START IMPROVING YOUR MEMORY SKILLS</Text>
         </Layout>
       )}
       <FlatList
