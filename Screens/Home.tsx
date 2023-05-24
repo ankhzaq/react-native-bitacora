@@ -105,9 +105,7 @@ const Home = () => {
           <Text category='h5'>LIST</Text>
         </Layout>
       ) : (
-        <Layout style={styles.titleSection}>
-          <Text>THERE ARE NOT ITEMS TO SHOW. PLEASE, ADD SOME ITEM TO START IMPROVING YOUR MEMORY SKILLS</Text>
-        </Layout>
+        <Text style={styles.emptyMessage} >THERE ARE NOT ITEMS TO SHOW. PLEASE, ADD SOME ITEM TO START IMPROVING YOUR MEMORY SKILLS</Text>
       )}
       <FlatList
         data={dataToShow}
@@ -172,6 +170,11 @@ const Home = () => {
 }
 
 const styles = StyleSheet.create({
+  emptyMessage: {
+    color: 'darkgrey',
+    marginTop: 25,
+    textAlign: 'center',
+  },
   backdrop: {
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
