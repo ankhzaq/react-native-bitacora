@@ -82,7 +82,7 @@ const Home = () => {
   }, []);
 
   return (
-    <Layout style={{ flex: 1, paddingHorizontal: 10 }}>
+    <Layout style={styles.layout}>
       <FontAwesome name="user-o" onPress={pressHandler} style={{ margin: 15 }} />
       <Button
         onPress={() => {
@@ -170,6 +170,10 @@ const Home = () => {
 }
 
 const styles = StyleSheet.create({
+  layout: {
+    flex: 1,
+    paddingHorizontal: 10,
+  },
   emptyMessage: {
     color: 'darkgrey',
     marginTop: 25,
