@@ -2,7 +2,7 @@ import { View, FlatList, StyleSheet, Pressable } from 'react-native'
 import { Button, Layout, Text } from '@ui-kitten/components';
 import React, { useState, useEffect, useMemo, useCallback } from 'react'
 import { ScrollView } from 'react-native';
-import { firebase, ROUTES } from '../config';
+import { firebase, ROUTE_DETAIL, ROUTE_GRAPHIC, ROUTES } from '../config';
 import { FontAwesome } from "@expo/vector-icons";
 import { ItemToShow, ItemWithId } from '../types/item';
 import ImageItem from '../Components/ImageItem';
@@ -69,14 +69,14 @@ const Home = () => {
       const indexItemResult = result.findIndex((itemResult: ItemToShow) => JSON.stringify(itemResult.tag) === JSON.stringify(item.tag));
       if (indexItemResult >= 0) result[indexItemResult].count += 1;
       else {
-        result.push({ ...item });
+        result.push({ ...item, count: 0 });
       }
     });
     return data;
   }, [data]);
 
   const tagClicked = useCallback((tag) => {
-    navigation.navigate(ROUTES.graphic, {
+    navigation.navigate(ROUTE_GRAPHIC, {
       tags: [tag]
     });
   }, []);
@@ -86,7 +86,7 @@ const Home = () => {
       <FontAwesome name="user-o" onPress={pressHandler} style={{ margin: 15 }} />
       <Button
         onPress={() => {
-          navigation.navigate(ROUTES.graphic);
+          navigation.navigate(ROUTE_GRAPHIC);
         }}
         style={{ marginLeft: 15, marginBottom: 15, }}
       >
@@ -94,7 +94,7 @@ const Home = () => {
       </Button>
       <Button
         onPress={() => {
-          navigation.navigate(ROUTES.detail);
+          navigation.navigate(ROUTE_DETAIL);
         }}
         style={{ marginLeft: 15 }}
       >
@@ -117,7 +117,7 @@ const Home = () => {
             <View style={styles.container}>
               <Pressable
                 onPress={() => {
-                  navigation.navigate(ROUTES.detail, { data: item });
+                  navigation.navigate(ROUTE_DETAIL, { data: item });
                 }}
               >
                 <Layout style={{ ...styles.header, ...styles.backgroundColorWrapper}}>

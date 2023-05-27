@@ -6,10 +6,21 @@ import { createStackNavigator } from '@react-navigation/stack';
 
 import Home from './Screens/Home';
 import Detail from './Screens/Detail';
-import { ROUTES } from './config';
+import { ROUTE_DETAIL, ROUTE_GRAPHIC, ROUTE_LIST } from './config';
 import Graphic from './Screens/Graphic';
+import { ItemWithId } from './types/item';
 
-const Stack = createStackNavigator()
+type RootStackParamList = {
+  detail: {
+    dataItem?: ItemWithId
+  },
+  graphic: {
+    tags?: string[]
+  },
+  list: undefined,
+};
+
+const Stack = createStackNavigator<RootStackParamList>();
 
 export default function App() {
   return (
@@ -18,15 +29,15 @@ export default function App() {
         <NavigationContainer>
           <Stack.Navigator screenOptions={{headerShown: false}}>
             <Stack.Screen
-              name={ROUTES.list}
               component={Home}
+              name={ROUTE_LIST}
             />
             <Stack.Screen
-              name={ROUTES.detail}
+              name={ROUTE_DETAIL}
               component={Detail}
             />
             <Stack.Screen
-              name={ROUTES.graphic}
+              name={ROUTE_GRAPHIC}
               component={Graphic}
             />
           </Stack.Navigator>

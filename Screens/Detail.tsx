@@ -1,10 +1,10 @@
 import { Image, Keyboard, StyleSheet, View } from 'react-native'
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Button, Input, Layout, Tab, TabBar, Text } from '@ui-kitten/components';
 import { MaterialIcons, FontAwesome } from '@expo/vector-icons';
 import { ScrollView, TouchableHighlight } from 'react-native-gesture-handler';
 import DateSelector from '../Components/DateSelector';
-import { apiConfig, firebase, ROUTES } from '../config';
+import { apiConfig, firebase, ROUTE_DETAIL } from '../config';
 import * as ImagePicker from 'expo-image-picker';
 import { Item, ItemWithId } from '../types/item';
 import { useNavigation } from '@react-navigation/native';
@@ -107,7 +107,7 @@ const Detail = ({ route }) => {
           alert(error);
         });
     }
-    navigation.navigate(ROUTES.list);
+    navigation.navigate(ROUTE_DETAIL);
   }
 
   const handleGetImages = async () => {
