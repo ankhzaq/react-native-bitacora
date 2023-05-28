@@ -2,18 +2,19 @@ import { View, FlatList, StyleSheet, Pressable } from 'react-native'
 import { Button, Layout, Text } from '@ui-kitten/components';
 import React, { useState, useEffect, useMemo, useCallback } from 'react'
 import { ScrollView } from 'react-native';
-import { firebase, ROUTE_DETAIL, ROUTE_GRAPHIC, ROUTES } from '../config';
+import { firebase, ROUTE_DETAIL, ROUTE_GRAPHIC } from '../config';
 import { FontAwesome } from "@expo/vector-icons";
 import { ItemToShow, ItemWithId } from '../types/item';
 import ImageItem from '../Components/ImageItem';
 import * as LocalAuthentication from 'expo-local-authentication';
 import { useNavigation } from '@react-navigation/native';
+import { StackNavigation } from '../App';
 
 const Home = () => {
   const [data, setData] = useState([]);
   const dataRef = firebase.firestore().collection('bitacora');
 
-  const navigation = useNavigation();
+  const navigation = useNavigation<StackNavigation>();
 
   const removeImageItem = (data: ItemWithId, image: string) => {
     const nextData = JSON.parse(JSON.stringify(data));
@@ -66,7 +67,7 @@ const Home = () => {
   const dataToShow = useMemo(() => {
     const result: ItemToShow[] = [];
     data.forEach((item: ItemWithId) => {
-      const indexItemResult = result.findIndex((itemResult: ItemToShow) => JSON.stringify(itemResult.tag) === JSON.stringify(item.tag));
+      const indexItemResult = result.findIndex((itemResult: ItemToShow) => JSON.stringify(itemResult.tags) === JSON.stringify(item.tags));
       if (indexItemResult >= 0) result[indexItemResult].count += 1;
       else {
         result.push({ ...item, count: 0 });
@@ -75,10 +76,11 @@ const Home = () => {
     return data;
   }, [data]);
 
-  const tagClicked = useCallback((tag) => {
-    navigation.navigate(ROUTE_GRAPHIC, {
-      tags: [tag]
-    });
+  const tagClicked = useCallback((tag: string) => {
+    return navigation.navigate("graphic",
+      {
+        tags: [tag]
+      });
   }, []);
 
   return (

@@ -9,6 +9,7 @@ import * as ImagePicker from 'expo-image-picker';
 import { Item, ItemWithId } from '../types/item';
 import { useNavigation } from '@react-navigation/native';
 import TagSelector from '../Components/TagSelector';
+import { StackNavigation } from '../App';
 
 let timeOut = null;
 
@@ -51,7 +52,7 @@ const Detail = ({ route }) => {
   const [images, setImages] = useState<string[]>([]);
   const [imagesSelected, setImagesSelected] = useState<string[]>(dataItem?.images || []);
 
-  const navigation = useNavigation();
+  const navigation = useNavigation<StackNavigation>();
 
 
   useEffect(() => {
